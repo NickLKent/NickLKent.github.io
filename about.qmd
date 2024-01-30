@@ -1,9 +1,15 @@
 ---
 title: "About"
+about: 
+  template: solana
 ---
 
-About this site
+## Education
 
-```{r}
-1 + 1
-```
+Macalester College \| St. Paul, MN
+
+Major: Data Science \| Minor: Computer Science and Economics \| September 2022 - Present
+
+## Experience
+
+UnitedHealth Group \| Analyst Intern \| May 2024 - August 2024

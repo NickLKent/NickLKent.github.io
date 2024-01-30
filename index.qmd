@@ -1,11 +1,7 @@
 ---
-title: "Nick Kent - Personal Website"
+title: "Welcome To My Website"
 ---
 
-This is a Quarto website.
+Welcome to my personal website, created using Quarto. My name is Nick Kent. I am a sophomore at Macalester College, and pursuing a major in data science and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.
 
 To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```

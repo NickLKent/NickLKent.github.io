@@ -1,8 +1,9 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "NickLKent.github.io"
+  title: "Nick Kent"
   navbar:
     left:
       - href: index.qmd
@@ -11,7 +12,7 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: lumen
     css: styles.css
     toc: true
 

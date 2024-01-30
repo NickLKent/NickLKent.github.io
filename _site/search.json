@@ -4,13 +4,27 @@
     "href": "index.html",
     "title": "Nick Kent - Personal Website",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "Welcome to my personal website, created using Quarto. My name is Nick Kent. I am a sophomore at Macalester College, and pursuing a major in data science and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "Macalester College | St. Paul, MN\nMajor: Data Science | Minor: Computer Science and Economics | September 2022 - Present"
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "",
+    "text": "Macalester College | St. Paul, MN\nMajor: Data Science | Minor: Computer Science and Economics | September 2022 - Present"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About",
+    "section": "Experience",
+    "text": "Experience\nUnitedHealth Group | Analyst Intern | May 2024 - August 2024"
   }
 ]
