@@ -2,8 +2,43 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Welcome To My Website",
+    "title": "Welcome!",
     "section": "",
-    "text": "Welcome to my personal website, created using Quarto. My name is Nick Kent. I am a sophomore at Macalester College, and pursuing a major in data science and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Welcome to my personal website, created using Quarto. My name is Nick Kent. I am a sophomore at Macalester College pursuing a major in data science, and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.\n\n\n\n\n\nI am just wrapped up my software year, and having been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Macalester College | St. Paul, MN\nMajor: Data Science | Minor: Computer Science and Economics | September 2022 - Present"
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "Education",
+    "text": "Education\n\nMacalester College | St. Paul, MN\nMajor: Data Science\nMinor: Computer Science and Economics\nSeptember 2022 - Present"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About",
+    "section": "Experience",
+    "text": "Experience\n\nUnitedHealth Group\nAnalyst Intern\nMay 2024 - August 2024"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Visualizations",
+    "section": "",
+    "text": "knitr::include_graphics(\"spi_ratings.png\")"
+  },
+  {
+    "objectID": "about.html#extracurriculars",
+    "href": "about.html#extracurriculars",
+    "title": "About",
+    "section": "Extracurricular’s",
+    "text": "Extracurricular’s\n\nMacalester Men’s Soccer\nMIAC All-Conference Honors(Fall 2022, Fall 2023)\nUnited Soccer Coaches All-Region Honors(Fall 2023)\nCSC Academic All-District Honors(Fall 2023)\nMIAC Academic All-Conference(Fall 2023)"
   }
 ]

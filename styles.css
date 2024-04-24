@@ -1,1 +1,28 @@
 /* css styles */
+.title{
+  color: BurlyWood;
+  text-shadow: 2px 0 #158CBA, -2px 0 #158CBA, 0 2px #158CBA, 0 -2px #158CBA,
+             1px 1px #158CBA, -1px -1px #158CBA, 1px -1px #158CBA, -1px 1px #158CBA;
+}
+.Education{
+  color: dimgrey;
+  line-height: 0.5;
+}
+.Experience{
+  color: dimgrey;
+  line-height: 0.5;
+}
+.Extracurriculars{
+  color: dimgrey;
+  line-height: 0.5;
+}
+.intro{
+  color: dimgrey;
+}
+.graph{
+  border-top: 1px solid BurlyWood; /*vertical line*/
+  padding: 20px; /*margin between pictures and vertical line*/
+  display: flex;
+  flex-direction: row;
+  width: 95%;
+}

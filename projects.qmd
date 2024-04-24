@@ -1,0 +1,56 @@
+---
+title: "Visualizing data"
+format: 
+  html:
+    css: "styles.css"
+about: 
+  template: solana
+---
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("spi_ratings.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("trade.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("natdis.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("nhlcanada.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("weather.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("unions.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("crashes1.png")
+```
+:::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("crashes.png")
+```
+:::

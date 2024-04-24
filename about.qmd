@@ -1,15 +1,48 @@
+<div>
+
 ---
 title: "About"
+format: 
+  html:
+    css: "styles.css"
 about: 
   template: solana
 ---
 
-## Education
+</div>
 
-Macalester College \| St. Paul, MN
+## **Education** {style="color: #158CBA"}
 
-Major: Data Science \| Minor: Computer Science and Economics \| September 2022 - Present
+::: {#Education .Education}
+**Macalester College** \| St. Paul, MN
 
-## Experience
+Major: Data Science
 
-UnitedHealth Group \| Analyst Intern \| May 2024 - August 2024
+Minor: Computer Science and Economics
+
+September 2022 - Present
+:::
+
+## Extracurricular's {style="color: #158CBA"}
+
+::: {#Extracurriculars .Extracurriculars}
+**Macalester Men's Soccer**
+
+MIAC All-Conference Honors(Fall 2022, Fall 2023)
+
+United Soccer Coaches All-Region Honors(Fall 2023)
+
+CSC Academic All-District Honors(Fall 2023)
+
+MIAC Academic All-Conference(Fall 2023)
+:::
+
+## Experience {style="color: #158CBA"}
+
+::: {#Experience .Experience}
+**UnitedHealth Group**
+
+Analyst Intern
+
+May 2024 - August 2024
+:::
