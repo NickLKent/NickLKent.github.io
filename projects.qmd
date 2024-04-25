@@ -54,3 +54,9 @@ knitr::include_graphics("crashes1.png")
 knitr::include_graphics("crashes.png")
 ```
 :::
+
+::: graph
+```{r, echo=FALSE}
+knitr::include_graphics("graph2.png")
+```
+:::
