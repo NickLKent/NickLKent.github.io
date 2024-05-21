@@ -9,7 +9,8 @@ website:
       - text: "Home"
         file: index.qmd
       - about.qmd
-      - projects.qmd
+      - data_viz.qmd
+      - projects/Projects.qmd
 
 format:
   html:

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Nick Kent - Welcome!</title>
+<title>Nick Kent - Visualizing data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
@@ -64,7 +63,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -82,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="./index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -90,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./data_viz.html" rel="" target="">
+    <a class="nav-link active" href="./data_viz.html" rel="" target="" aria-current="page">
  <span class="menu-text">Visualizing data</span></a>
   </li>  
   <li class="nav-item">
@@ -108,42 +107,89 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-about-solana column-body">
+  <div class="about-entity">
+    <div class="entity-contents">
+      <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Welcome!</h1>
+<h1 class="title">Visualizing data</h1>
 </div>
-
-
-
 <div class="quarto-title-meta">
-
-    
-  
-    
   </div>
-  
-
-</header>
-
-<div class="intro" style="float:right">
-<p>Welcome to my personal website, created using <strong>Quarto</strong>. My name is <strong>Nick Kent</strong>. I am a sophomore at Macalester College pursuing a major in data science, and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.</p>
+</header> 
+      <div class="about-contents"><main class="content" id="quarto-document-content">
+<div class="graph">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="Headshot.jpg" class="img-fluid" width="150"></p>
+<p><img src="spi_ratings.png" class="img-fluid" width="700"></p>
 </div>
 </div>
-<p>I am just wrapped up my software year, and having been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset.</p>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="trade.png" class="img-fluid" width="791"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="natdis.png" class="img-fluid" width="774"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="nhlcanada.png" class="img-fluid" width="700"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="weather.png" class="img-fluid" width="700"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="unions.png" class="img-fluid" width="700"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="crashes1.png" class="img-fluid" width="700"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="crashes.png" class="img-fluid" width="700"></p>
+</div>
+</div>
+</div>
+<div class="graph">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="graph2.png" class="img-fluid" width="700"></p>
+</div>
+</div>
 </div>
 
 
-
-</main> <!-- /main -->
+</main></div>
+    </div>
+  </div>
+</div>
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -164,13 +210,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

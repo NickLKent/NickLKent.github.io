@@ -40,5 +40,19 @@
     "title": "About",
     "section": "Extracurricular’s",
     "text": "Extracurricular’s\n\nMacalester Men’s Soccer\nMIAC All-Conference Honors(Fall 2022, Fall 2023)\nUnited Soccer Coaches All-Region Honors(Fall 2023)\nCSC Academic All-District Honors(Fall 2023)\nMIAC Academic All-Conference(Fall 2023)"
+  },
+  {
+    "objectID": "projects/SP1/SP_1_Trade:Disasters.html",
+    "href": "projects/SP1/SP_1_Trade:Disasters.html",
+    "title": "Modeling Trade VS Natural Disasters",
+    "section": "",
+    "text": "Loading the data\n\n# Necessary packages\nlibrary(tidyverse)\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)\nlibrary(GGally)\nlibrary(broom) \n\n# Loading in the dataset\nnatural_disaster &lt;- read_csv(\"nat_disaster_data.csv\")\ncountry_trade_data &lt;- read_csv(\"country_trade_data.csv\")\n\n\n\nData wrangling/cleaning\n\n# Creating a data set for each countries number of natural disasters per year over the last 23 years. \nnat_dis_per_year_per_country &lt;- natural_disaster %&gt;% \n  group_by(Country, `Start Year`) %&gt;% \n  summarise(num_of_nat_dis = n()) %&gt;% \n  mutate(\"Start Year\" = as.character(`Start Year`))\n\n# Obtain a data set for each countries trade percentage of GDP over the last 23 years. \ntrade_per_year_per_country &lt;- country_trade_data %&gt;% \n  pivot_longer(cols = c(\"1999\",\"2000\",\"2001\",\"2002\",\"2003\",\"2004\",\"2005\",\"2006\",\"2007\",\"2008\",\"2009\",\"2010\",\"2011\",\"2012\",\"2013\",\"2014\",\"2015\",\"2016\",\"2017\",\"2018\",\"2019\",\"2020\",\"2021\",\"2022\"), names_to = \"Year\", values_to = \"Trade share of GDP\") %&gt;% \n  select(`Country Name`, Year, `Trade share of GDP`)\n\n# We now have a data set that contains a line for each country and year combination, and then along with that is the countries trade share of GDP and number of natural disasters in that year. \nmodel_data &lt;- trade_per_year_per_country %&gt;% \n  left_join(nat_dis_per_year_per_country, by = c(\"Country Name\" = \"Country\", \"Year\" = \"Start Year\")) %&gt;% \n  filter(!is.na(num_of_nat_dis))\n\n\n\nCreating a model\n\nmodel &lt;- model_data %&gt;%\n  with(lm(`Trade share of GDP` ~ num_of_nat_dis))\n\nmodel %&gt;% \n  tidy()\n\n# A tibble: 2 × 5\n  term           estimate std.error statistic  p.value\n  &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 (Intercept)       81.8      1.11       73.9 0       \n2 num_of_nat_dis    -2.09     0.187     -11.2 3.41e-28\n\nmodel %&gt;% \n  tidy() %&gt;% \n  summarize(lb = estimate - 2*std.error, ub = estimate + 2*std.error)\n\n# A tibble: 2 × 2\n     lb    ub\n  &lt;dbl&gt; &lt;dbl&gt;\n1 79.6  84.0 \n2 -2.47 -1.72\n\n\n\n\nTakeaways from the model\n\n\nConfidence interval for the slope does not contain zero and all the values in the interval are negative which means we can be sure that there is a negative relationship between natural disasters and the trade share of GDP.\nThe intercept tells us that if a country faces no natural disasters then on average their trade share of GDP will be about 81.77 %.\nThe estimate for the slope tells us that on average for every one additional natural disaster that occurs in a country their trade share of GDP will drop by an average of 2.092 %.\nP-value for both the intercept and the slope are extremely low meaning that these estimates are statistically significant."
+  },
+  {
+    "objectID": "projects/Projects.html",
+    "href": "projects/Projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Modeling Trade VS Natural Disasters"
   }
 ]
