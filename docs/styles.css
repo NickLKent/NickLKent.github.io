@@ -26,3 +26,7 @@
   flex-direction: row;
   width: 95%;
 }
+
+.project-layout{
+  color: dimgrey;
+}

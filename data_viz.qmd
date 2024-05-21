@@ -9,54 +9,54 @@ about:
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("spi_ratings.png")
+knitr::include_graphics("viz/spi_ratings.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("trade.png")
+knitr::include_graphics("viz/trade.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("natdis.png")
+knitr::include_graphics("viz/natdis.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("nhlcanada.png")
+knitr::include_graphics("viz/nhlcanada.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("weather.png")
+knitr::include_graphics("viz/weather.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("unions.png")
+knitr::include_graphics("viz/unions.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("crashes1.png")
+knitr::include_graphics("viz/crashes1.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("crashes.png")
+knitr::include_graphics("viz/crashes.png")
 ```
 :::
 
 ::: graph
 ```{r, echo=FALSE}
-knitr::include_graphics("graph2.png")
+knitr::include_graphics("viz/graph2.png")
 ```
 :::

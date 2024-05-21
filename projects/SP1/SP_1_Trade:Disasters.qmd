@@ -1,6 +1,6 @@
 ---
 title: "Modeling Trade VS Natural Disasters"
-author: "Nick Kent(Tuesday, May 21st 2024)"
+author: "Nick Kent"
 format:
   html:
     self-contained: true

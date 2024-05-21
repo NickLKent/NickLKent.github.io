@@ -12,5 +12,5 @@ Welcome to my personal website, created using **Quarto**. My name is **Nick Kent
 knitr::include_graphics("Headshot.jpg")
 ```
 
-I am just wrapped up my software year, and having been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset.
+I am just wrapped up my sophomore year, and have been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset.
 :::

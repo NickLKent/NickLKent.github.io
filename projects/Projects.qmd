@@ -1,3 +1,22 @@
 ---
 title: "Projects"
+format: 
+  html:
+    css: "styles.css"
 ---
+
+### Modeling Trade Shares of GDP vs Natural Disasters {style="color: #158CBA"}
+
+:::{.project-layout}
+How does the number of natural disasters effect the trade share of GDP?
+
+[<button>Open disasters VS trade project</button>](SP1/SP_1_Trade:Disasters.qmd)
+:::
+
+### Exploring Premier League SPI Ratings {style="color: #158CBA"}
+
+:::{.project-layout}
+What types of things impact the Soccer Power Index of a Premier League club?
+
+[<button>Explore Premier League Rankings</button>](SP2/Final_Blog_Post.html)
+:::
