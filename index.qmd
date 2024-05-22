@@ -6,11 +6,19 @@ format:
 ---
 
 ::: {.intro style="float:right"}
-Welcome to my personal website, created using **Quarto** in R/RStudio. My name is **Nick Kent**. I am a sophomore at Macalester College pursuing a major in data science, and minors in computer science and economics. Please take a look through this website if you would like to learn more about myself and some of my projects.
+Welcome to my personal website, created using **Quarto** in R/RStudio. My name is **Nick Kent**. I am a junior at Macalester College pursuing a major in data science, and minors in computer science and economics. I have been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset. Please take a look through this website if you would like to learn more about myself and some of my work.
 
 ```{r, echo=FALSE}
 knitr::include_graphics("Headshot.jpg")
 ```
 
-I am just wrapped up my sophomore year, and have been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset.
+
+I spend lots of time playing soccer. During the fall(and the majority of the school year) I compete as a member of the men's soccer team at Macalester College, and over the summer I spend time playing with Minneapolis City Soccer Club.
+
+<img src="mac_soccer.jpg" width="380" />
+<img src="city_soccer.jpg" width="380" />
+
+I also enjoy spending time with friends and family outdoors, and trying new restaurants. My favorite places to hangout in Minneapolis are the lakes in Minneapolis(Harriet, Bde Maka Ska, Cedar, Isles). Furthermore, I enjoy restaurants such as Black Sheep Pizza, World Street Kitchen, Quangs, and Andale Taqueria. 
+
+<img src="lake.jpeg" width="300" height = 400/>
 :::

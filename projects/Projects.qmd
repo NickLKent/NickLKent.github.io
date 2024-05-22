@@ -10,7 +10,7 @@ format:
 :::{.project-layout}
 How does the number of natural disasters effect the trade share of GDP?
 
-[<button>Open disasters VS trade project</button>](SP1/SP_1_Trade:Disasters.qmd)
+[<button>View disasters VS trade project</button>](SP1/SP_1_Trade:Disasters.qmd)
 :::
 
 ### Exploring Premier League SPI Ratings {style="color: #158CBA"}

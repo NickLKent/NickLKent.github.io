@@ -1,15 +1,10 @@
-<div>
-
 ---
-title: "About"
+title: "Resume"
 format: 
   html:
     css: "styles.css"
-about: 
-  template: solana
 ---
 
-</div>
 
 ## **Education** {style="color: #158CBA"}
 
@@ -23,7 +18,7 @@ Minor: Computer Science and Economics
 September 2022 - Present
 :::
 
-## Extracurricular's {style="color: #158CBA"}
+## Extracurricular(s) {style="color: #158CBA"}
 
 ::: {#Extracurriculars .Extracurriculars}
 **Macalester Men's Soccer**
@@ -47,4 +42,18 @@ Rising Scot Scholar Athlete of the Year(2023-2024)
 Analyst Intern
 
 May 2024 - August 2024
+:::
+
+## Skills {style="color: #158CBA"}
+
+::: {#Experience .Experience}
+**Computer skills : **
+R/RStudio, 
+Java, 
+Javascript, 
+HTML, 
+CSS, 
+SQL, 
+Python, 
+React
 :::

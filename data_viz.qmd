@@ -7,6 +7,10 @@ about:
   template: solana
 ---
 
+:::intro
+I have developed a strong passion for visualizing data. I feel as though lots can be learned about data through simple or complex data visualizations, and these same visualizations can guide a persons decision making about a problem involving data. I also am convinced that exploring data through visualizations is more appealing and can tell interesting stories. 
+:::
+
 ::: graph
 ```{r, echo=FALSE}
 knitr::include_graphics("viz/spi_ratings.png")
