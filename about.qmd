@@ -32,6 +32,18 @@ CSC Academic All-District Honors(Fall 2023)
 MIAC Academic All-Conference(Fall 2023)
 
 Rising Scot Scholar Athlete of the Year(2023-2024)
+
+**Macalester College MSCS Student Advisory Board** 
+
+Members of this board serve as a bridge of communication between students and staff in the Math, Statistics, and Computer Science departments. 
+
+Advisory Board members also introduce and facilitate their own inclusivity and accessibility initiatives. 
+
+**Macalester College Data Science Club**
+
+Founder of the data science club where students and faculty come together weekly to practice and share data science skills. 
+
+At our meetings we will work on items ranging from mini projects, skill exercises, personal portfolios, etc. 
 :::
 
 ## Experience {style="color: #158CBA"}

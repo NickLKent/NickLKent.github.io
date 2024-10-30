@@ -6,15 +6,16 @@
 }
 .Education{
   color: dimgrey;
-  line-height: 0.5;
+  line-height: 0.9;
 }
 .Experience{
   color: dimgrey;
-  line-height: 0.5;
+  line-height: 0.9;
+  line-break: 0.2;
 }
 .Extracurriculars{
   color: dimgrey;
-  line-height: 0.5;
+  line-height: 0.9;
 }
 .intro{
   color: dimgrey;
