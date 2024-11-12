@@ -20,3 +20,12 @@ What types of things impact the Soccer Power Index of a Premier League club?
 
 [<button>Explore Premier League Rankings</button>](SP2/Final_Blog_Post.html)
 :::
+
+
+###  Liberal Arts Education at Macalester College {style="color: #158CBA"}
+
+:::{.project-layout}
+What does a liberal arts education look like at Macalester College? What sorts of classes do students take? What kind of departments do they participate in?
+
+[<button>Explore an Education at Macalester College</button>](SP3/Lib_Ed.html)
+:::
