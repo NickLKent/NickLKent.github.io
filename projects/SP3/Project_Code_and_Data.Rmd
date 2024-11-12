@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-```{r}
+```{r message=FALSE}
 library(readr)
 library(dplyr)
 library(plotly)
@@ -25,7 +25,7 @@ majordata <- read_csv("majordata.csv")
 
 > Research question idea: How do different majors vary in the average number of classes taken in each division? How does
 
-```{r}
+```{r message=FALSE, results=FALSE}
 # ----CODE FOR TAB NUMBER 3 IN THE SHINY APP----
 
 # here we are mainly just pivoting the major data into a longer format so that it's easier to work with.
@@ -133,7 +133,9 @@ avgPrefix2 <- avgPrefix %>%
   select(major1, avgPrefix, major1_division)%>%
   distinct()
 
+```
 
+```{r}
 
 # ------ PRACTICE VISUALIZATIONS------
 
@@ -162,7 +164,7 @@ ggplotly(viz1)
 
 ```
 
-```{r}
+```{r message=FALSE, results=FALSE}
 #This is the custom theme that each one of the visualizations in the shiny app are using. 
 
 theme_gppr <- function(){ 
