@@ -29,3 +29,13 @@ What does a liberal arts education look like at Macalester College? What sorts o
 
 [<button>Explore an Education at Macalester College</button>](SP3/Lib_Ed.html)
 :::
+
+###  Comparing Fast Food's {style="color: #158CBA"}
+
+:::{.project-layout}
+Are there better/healthier caloric fast food restaurants? 
+
+[<button>Explore Fast Foods Restaurants Code</button>](SP4/FinalReport.html)
+[<button>Explore Part 1 of analysis</button>](SP4/Final_Phase1.html)
+[<button>Explore Part 2 of analysis</button>](SP4/Final_Phase2.html)
+:::

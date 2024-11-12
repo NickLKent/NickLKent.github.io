@@ -1,0 +1,123 @@
+---
+title: "Final_Phase2"
+author: "Nick, Cat, Charlie"
+date: "2023-04-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message=FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(ggmap)
+library(broom)
+```
+
+# Research Question
+
+> How does calorie content differ between McDonalds, Wendy’s, and Burger King, comparing the same food category (i.e. Sandwiches, Salads, Burgers)? In other words, how does fast food restaurant effect the relationship between food category and calorie content of a fast food menu item?
+
+```{r, message=FALSE}
+menu_stat <- read_csv("menu_items.csv")
+```
+
+# Data Cleaning
+
+```{r}
+#This cleans the data so that it gets rid of all of the menus items that have NA's for nutritional facts. 
+menu_stat2 <- menu_stat %>% 
+  rename(category = Food_Category) %>% 
+  select(restaurant, Item_Name, category, Calories, Total_Fat, Carbohydrates, Protein, Sugar) %>% 
+  filter(!category == "Toppings & Ingredients") %>% 
+  filter(!is.na(Calories), !is.na(Total_Fat), !is.na(Carbohydrates), !is.na(Protein)) 
+
+```
+
+# Looking at the data
+
+```{r}
+#Second data set idea
+final_menu_stat2 <- menu_stat2 %>% 
+  filter(restaurant %in% c("McDonald's", "Burger King", "Wendy's")) %>% 
+  filter(category %in% c("Burgers", "Fried Potatoes"))
+
+#Burgers are the most common fast food item in America and people often get fries with those burgers. 
+```
+
+# Regression Model
+
+$$ E[ Calories |  category * restaurant] = \beta_0 + \beta_1categoryFriedPotatoes + \beta_2RestaurantMcDonald's + \beta_3RestaurantWendy's \\
++ \beta_4categoryFriedPotatoes:RestaurantMcDonald's + \beta_8categoryFriedPotatoes:RestaurantWendy's $$
+
+# Fitting the linear regression model
+
+> We chose to use a linear regression model with an interaction between the category of the food and the restaurant to predict calorie content. We chose this model because we are trying to examine how calorie content differs among different food categories at fast food restaurants, and we believe that food category might effect calorie content differently based on the restaurant that the food item comes from, and for that reason we chose a linear regression model with an interaction.
+
+> Outcome variable = Calories(Quantitative)
+
+> Predictor of interest = Food Category(Categorical)
+
+> Precision variables: fat, protein, carbohydrates
+
+> Effect modifier: restaurant
+
+> Explanatory variables that we will use in our model: the interaction between category and restaurant.
+
+```{r}
+final_model <- final_menu_stat2 %>% 
+  with(lm(Calories ~ category*restaurant))
+
+# Next we want to know how do find the difference in burger king fries to mcdonalds fries? WE NEED TO REORDER THE VARIABLES?
+final_menu_stat2 %>% 
+  mutate(category = relevel(droplevels(factor(category)), ref = "Fried Potatoes")) %>% 
+  with(lm(Calories ~ category*restaurant))
+
+final_menu_stat2 %>% 
+  filter(restaurant == "Wendy's", category == "Fried Potatoes") %>% 
+  summarise(mean(Calories))
+final_menu_stat2 %>% 
+  filter(restaurant == "Wendy's", category == "Burgers") %>% 
+  summarise(mean(Calories))
+```
+
+# Coefficients and more from the model
+
+```{r}
+tidy(lm(Calories ~ category*restaurant, data = final_menu_stat2))
+```
+
+# Creating Confidence Intervals
+
+```{r}
+# Code for confidence intervals
+final_model %>% 
+  confint()
+```
+
+# Relevant Hypothesis test's
+
+> Ho: restaurantMcDonald's = 0 --\> There is no difference in the expected calories of a McDonald's Burger to a Burger King burger.
+
+> Ha: restaurantMcDonald's != 0 --\> There is a difference in the expected calories of a McDonald's Burger to a Burger King burger.
+
+> Ho: restaurantWendy's = 0 --\> There is no difference in the expected calories of a Wendy's Burger to a Burger King burger.
+
+> Ha: restaurantWendy's != 0 --\> There is a difference in the expected calories of a Wendy's Burger to a Burger King burger.
+
+# What do we learn from this model?
+
+> When we look at this model the first thing you notice is the intercept coefficient. This coefficient estimates that the calorie content of a Burger King burger is on average 551.27 calories. The you can see from the 'restaurantMcDonald's' coefficient that the estimated calorie increase in a McDonald's burger from a Burger King burger is 27.7 calories. Additionally the interval from -102.48 to 158.03 gives us a range of plausible values for the true difference in calorie content of a McDonald's burger and a Burger King burger, and we are 95% confident that the true population value for this coefficient will fall in this interval. Next, you can see from the 'restaurantWendy's' coefficient that the estimated calorie decrease in a Wendy's burger from a Burger King burger is 14.6 calories. Furthermore, the interval from -102.48 to 158.03 gives us a range of possible values for the true difference in calorie content of Wendy's burger and a Burger King burger, and we are 95% confident that the true population parameter will fall in that interval. In this model you can see the estimated difference in the calorie content when comparing a burger to fried potatoes among the three restaurant. Overall, from this model we learn that McDonald's burger tend to be the "least healthy" in terms of calorie content, followed by Burger King and then Wendy's. We could also find the same thing out about fried potatoes once we learn to reorder the variables and get an intercept for fries instead of burgers.
+
+# Hypothesis test decisions
+
+> (restaurantMcDonald's: p-value = 0.6738501) This p-value means that there is about a 67 percent chance of seeing this large of an estimated difference between the calorie content of a McDonald's burger and the calorie content of a Burger King burger if the null hypothesis is true. With a p-value of 0.67385019(for the 'restaurantMcDonald's coefficient) there is not statistically significant evidence to suggest that there is a difference between the calorie content of a McDonald's burger and a Burger King burger. Also, the confidence interval of -102.4839 to 158.03370 does contain the null value of 0. Because of both of these things, we once again fail to reject the null and cannot conclude that there is a difference in the expected calories of a McDonald's Burger to a Burger King burger.
+
+> (restaurantWendy's: p-value = 0.8247979)This p-value means that there is about a 82 percent chance of seeing this large of an estimated difference between the calorie content of a Wendy's burger and the calorie content of a Burger King burger if the null value is true. With a p-value of 0.8247979 there is not statistically significant evidence to suggest that there is a difference between the calorie content of a Wendy's burger and a Burger King burger, and we fail to reject the null hypothesis. Also, the confidence interval of -144.8649 to 115.65274 does contain the null value of 0. Because of both of these things, we once again fail to reject the null and cannot conclude that there is a difference in the expected calories of a Wendy's Burger to a Burger King burger.
+
+# Limitations
+
+> During our research and R code, we began to realize that there would be a couple limitations that will take place in our study. For instance, we were forced to exclude some fast food restaurants in our survey. The main reason we did this is because our data set contained over 96 different fast food restaurants, and if we included every single one of those(while using a regression model that examined the effect that restaurant has on calorie content) that would have made our linear model quite long and hard to work with. Another reason we chose to only work with McDonald's, Burger King and Wendy's is because we wanted to have nationwide chains (sorry Culvers) that were extremely popular and have locations all over the country. Additionally, we had to filter out a decent amount of menu items because we only chose to work with menu items that fell under the categories of salads, burgers, sandwiches, and fried Potatoes. The four categories that we chose for our model equation were items that were consistent among the restaurants that we chose to work with, they are looked at as some of the more common fast food menu items, they are all relatively equal in volume so the differences in calories among them wont strictly be due to the size of the foods, and lastly they are all considered entrees. For instance, we know that beverages have calories but it is very unfair to compare the calorie content of a drink to the calorie content of a burger or sandwhich.

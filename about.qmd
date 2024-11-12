@@ -18,43 +18,50 @@ Minor: Computer Science and Economics
 September 2022 - Present
 :::
 
+## Experience {style="color: #158CBA"}
+
+::: {#Experience .Experience}
+**UnitedHealth Group** \| Eden Prairie, MN
+
+Data Analyst Intern
+
+May 2024 - August 2024
+
+**Macalester College** \| St. Paul, MN
+
+Teaching Assistant for COMP/STAT 112, STAT 155, ECON 119
+
+September 2023 - Present
+:::
+
 ## Extracurricular(s) {style="color: #158CBA"}
 
 ::: {#Extracurriculars .Extracurriculars}
 **Macalester Men's Soccer**
 
-MIAC All-Conference Honors(Fall 2022, Fall 2023)
+  * MIAC All-Conference Honors(Fall 2022, Fall 2023, Fall 2024)
 
-United Soccer Coaches All-Region Honors(Fall 2023)
+  * United Soccer Coaches All-Region Honors(Fall 2023)
 
-CSC Academic All-District Honors(Fall 2023)
+  * CSC Academic All-District Honors(Fall 2023)
 
-MIAC Academic All-Conference(Fall 2023)
+  * MIAC Academic All-Conference(Fall 2023)
 
-Rising Scot Scholar Athlete of the Year(2023-2024)
+  * Rising Scot Scholar Athlete of the Year(2023-2024)
 
 **Macalester College MSCS Student Advisory Board** 
 
-Members of this board serve as a bridge of communication between students and staff in the Math, Statistics, and Computer Science departments. 
+  * Members of this board serve as a bridge of communication between students and staff in the Math, Statistics, and Computer Science departments. 
 
-Advisory Board members also introduce and facilitate their own inclusivity and accessibility initiatives. 
+  * Advisory Board members also introduce and facilitate their own inclusivity and accessibility initiatives. 
 
 **Macalester College Data Science Club**
 
-Founder of the data science club where students and faculty come together weekly to practice and share data science skills. 
+  * Founder of the data science club where students and faculty come together weekly to practice and share data science skills. 
 
-At our meetings we will work on items ranging from mini projects, skill exercises, personal portfolios, etc. 
+  * At our meetings we will work on items ranging from mini projects, skill exercises, personal portfolios, etc. 
 :::
 
-## Experience {style="color: #158CBA"}
-
-::: {#Experience .Experience}
-**UnitedHealth Group**
-
-Analyst Intern
-
-May 2024 - August 2024
-:::
 
 ## Skills {style="color: #158CBA"}
 
@@ -67,5 +74,6 @@ HTML,
 CSS, 
 SQL, 
 Python, 
-React
+React, 
+Excel
 :::

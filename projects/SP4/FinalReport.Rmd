@@ -1,0 +1,118 @@
+---
+title: "Final Report"
+author: "Nick Kent, Cat Martins, Charlie Bonham"
+date: "2023-04-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE, message = FALSE)
+```
+
+# Load Packages
+
+```{r load-packages, message=FALSE}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(broom)
+```
+
+## Load Data
+
+```{r load-data, message=FALSE, warning=F}
+menu_stat <- read_csv("menu_items.csv")
+```
+
+## Data Cleaning
+
+```{r}
+#This cleans the data so that it gets rid of all of the restaurants and menu items that we will not be using.  
+final_menu_stat <- menu_stat %>% 
+  rename(category = Food_Category) %>% 
+  select(restaurant, Item_Name, category, Calories, Total_Fat, Carbohydrates, Protein, Sugar) %>% 
+  filter(!category == "Toppings & Ingredients") %>% 
+  filter(!is.na(Calories)) %>% 
+  filter(restaurant %in% c("McDonald's", "Burger King", "Wendy's")) %>% 
+  filter(category %in% c("Burgers", "Fried Potatoes"))
+
+```
+
+# Research Question
+
+> How does calorie content differ between McDonalds, Wendy’s, and Burger King, comparing the same food category? In other words, how does fast food restaurant affect the relationship between food category and calorie content of a fast food menu item?
+
+## Numerical Summaries
+
+```{r}
+final_menu_stat %>% 
+  group_by(category, restaurant) %>% 
+  summarise(n(), median(Calories))
+
+```
+
+## Visualizations
+
+```{r}
+bluetheme <- theme(
+  plot.title = element_text(family = "Times New Roman", face = "bold", size = (15), colour = "steelblue4"),
+  legend.title = element_text(colour = "steelblue", face = "bold.italic", family = "Helvetica"),
+  legend.text = element_text(face = "italic", colour = "steelblue4", family = "Helvetica", ),
+  axis.title = element_text(family = "Times New Roman", size = (12), colour = "steelblue4", face = "bold"),
+  axis.text = element_text(family = "Times New Roman", colour = "cornflowerblue", size = (10))
+)
+
+final_menu_stat %>% 
+  filter(category == "Burgers") %>% 
+  arrange(desc(Calories)) %>% 
+  ggplot(aes(x = reorder(restaurant, Calories), y = Calories)) +
+  geom_boxplot(color = "darkblue", fill = "lightgray") +
+  labs(x = "Restaurant", y = "Calories", title = "Calorie Content of Burger's at Different Fast Food Restaurants") +
+  bluetheme
+
+final_menu_stat %>% 
+  filter(category == "Fried Potatoes") %>% 
+  arrange(desc(Calories)) %>% 
+  ggplot(aes(x = reorder(restaurant, Calories), y = Calories)) +
+  geom_boxplot(color = "darkblue", fill = "lightgray") +
+  labs(x = "Restaurant", y = "Calories", title = "Calorie Content of Fried Potatoes at Different Fast Food Restaurants", color = "darkblue") +
+  bluetheme
+
+```
+
+## Fit Model
+
+```{r fit-linear-model}
+# Model with burger as the intercept
+final_model <- final_menu_stat %>% 
+  with(lm(Calories ~ category*restaurant))
+
+#Model with fried potatoes as the intercept
+final_model_opposite <- final_menu_stat %>% 
+  mutate(category = relevel(droplevels(factor(category)), ref = "Fried Potatoes")) %>% 
+  with(lm(Calories ~ category*restaurant))
+```
+
+### Regression Model
+
+$$E[ Calories |  category * restaurant] = \beta_0 + \beta_1categoryFriedPotatoes + \beta_2RestaurantMcDonald's + \beta_3RestaurantWendy's $$ $$+ \beta_4categoryFriedPotatoes:RestaurantMcDonald's + \beta_5categoryFriedPotatoes:RestaurantWendy's $$
+
+## Inference
+
+#### Coefficient Estimates
+
+```{r estimates-and-pvalues}
+tidy(final_model)
+
+tidy(final_model_opposite)
+```
+
+#### Confidence Intervals
+
+```{r confidence-intervals}
+final_model %>% 
+  confint()
+
+final_model_opposite %>% 
+  confint()
+```

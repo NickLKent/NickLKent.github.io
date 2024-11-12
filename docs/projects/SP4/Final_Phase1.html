@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Nick K, Cat M, Charlie B, Lindsay">
+<meta name="dcterms.date" content="2023-03-27">
+
+<title>Nick Kent - Final Project - Phase 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Nick Kent</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">Resume</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../data_viz.html"> 
+<span class="menu-text">Visualizing data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects/Projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#description-of-our-data" id="toc-description-of-our-data" class="nav-link active" data-scroll-target="#description-of-our-data">Description of our data</a></li>
+  <li><a href="#description-of-our-research-questions" id="toc-description-of-our-research-questions" class="nav-link" data-scroll-target="#description-of-our-research-questions">Description of our research question(s)</a></li>
+  <li><a href="#numerical-summaries-and-visualizations" id="toc-numerical-summaries-and-visualizations" class="nav-link" data-scroll-target="#numerical-summaries-and-visualizations">Numerical summaries and visualizations</a>
+  <ul class="collapse">
+  <li><a href="#numerical-summarycount-of-restaurants-in-each-data-set" id="toc-numerical-summarycount-of-restaurants-in-each-data-set" class="nav-link" data-scroll-target="#numerical-summarycount-of-restaurants-in-each-data-set">Numerical Summary(Count of restaurants in each data set)</a></li>
+  <li><a href="#numerical-summarymean-nutritional-facts-for-each-restaurant" id="toc-numerical-summarymean-nutritional-facts-for-each-restaurant" class="nav-link" data-scroll-target="#numerical-summarymean-nutritional-facts-for-each-restaurant">Numerical Summary(Mean nutritional facts for each restaurant)</a></li>
+  <li><a href="#numerical-summarymean-nutritional-facts-for-each-type-of-food" id="toc-numerical-summarymean-nutritional-facts-for-each-type-of-food" class="nav-link" data-scroll-target="#numerical-summarymean-nutritional-facts-for-each-type-of-food">Numerical Summary(Mean nutritional facts for each type of food)</a></li>
+  <li><a href="#numerical-summarynumber-of-fast-food-restaurants-in-each-state" id="toc-numerical-summarynumber-of-fast-food-restaurants-in-each-state" class="nav-link" data-scroll-target="#numerical-summarynumber-of-fast-food-restaurants-in-each-state">Numerical Summary(Number of fast food restaurants in each state)</a></li>
+  <li><a href="#numerical-summarynumber-of-fast-food-restaurants-in-the-northern-united-states-versus-southern-united-states" id="toc-numerical-summarynumber-of-fast-food-restaurants-in-the-northern-united-states-versus-southern-united-states" class="nav-link" data-scroll-target="#numerical-summarynumber-of-fast-food-restaurants-in-the-northern-united-states-versus-southern-united-states">Numerical Summary(Number of fast food restaurants in the Northern United States versus Southern United States)</a></li>
+  <li><a href="#visualizationbarchart-with-the-most-popular-fastfood-restaurants" id="toc-visualizationbarchart-with-the-most-popular-fastfood-restaurants" class="nav-link" data-scroll-target="#visualizationbarchart-with-the-most-popular-fastfood-restaurants">Visualization(Barchart with the most popular fastfood restaurants)</a></li>
+  <li><a href="#visualizationaverage-amount-of-calories-in-a-fast-food-menu-item" id="toc-visualizationaverage-amount-of-calories-in-a-fast-food-menu-item" class="nav-link" data-scroll-target="#visualizationaverage-amount-of-calories-in-a-fast-food-menu-item">Visualization(Average amount of calories in a fast food menu item)</a></li>
+  <li><a href="#visualizationhow-does-type-of-food-effect-the-calories" id="toc-visualizationhow-does-type-of-food-effect-the-calories" class="nav-link" data-scroll-target="#visualizationhow-does-type-of-food-effect-the-calories">Visualization(How does type of food effect the calories?)</a></li>
+  </ul></li>
+  <li><a href="#what-did-we-learn-from-our-exploratory-data-analysis" id="toc-what-did-we-learn-from-our-exploratory-data-analysis" class="nav-link" data-scroll-target="#what-did-we-learn-from-our-exploratory-data-analysis">What Did we Learn from our Exploratory Data Analysis?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Final Project - Phase 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Nick K, Cat M, Charlie B, Lindsay </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 27, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Loading Data sets</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fast_food_locations <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"fast_food_locations.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>menu_stat <span class="ot">&lt;-</span>  <span class="fu">read_csv</span>(<span class="st">"menu_items.csv"</span>) <span class="co">#binary variable --&gt; 'shareable' and 'limited_time_offer'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+</div>
+<section id="description-of-our-data" class="level1">
+<h1>Description of our data</h1>
+<blockquote class="blockquote">
+<p>Dataset #1(“fast_food_locations”): The first dataset was Fast Food locations which was created in 2018 and we found this dataset using Data.World. This is a list of 10,000 fast food restaurants provided by Datafiniti’s Business Database. The dataset includes the restaurant’s address, city, latitude and longitude coordinates, name, etc.. Dataset #2(“menu_stat”): We received our data from Data.World and it is owned by DataInfiniti. The MenuStat dataset was created by the City of New York in 2022. More specifically, this dataset came from NYC Open Data which is public data generated by various New York City agencies and other City organizations that is available for public use. It provides information about top national restaurant chains. Each item is coded a mutually exclusive food category and descriptive information is coded into binary variables (e.g.&nbsp;on the kids menu). This includes information about: menu_item_id, year, restaurant_item_name, restaurant, restaurant_id, item_name, and multiple nutritional facts. We decided to use two datasets so that we can include locations which we think are important. The datasets have overlapping restaurants so we can combine/filter the dataset according to our needs. We will have to be careful to not change the observations so as to not affect our analyses.</p>
+</blockquote>
+</section>
+<section id="description-of-our-research-questions" class="level1">
+<h1>Description of our research question(s)</h1>
+<blockquote class="blockquote">
+<p>Which restaurants in each location have the best/worst nutritional content? Which locations have the best/worst nutritional content? How does the category of the food affect it’s nutritional facts? How does meat contents affect nutritional content (present or not)?</p>
+</blockquote>
+</section>
+<section id="numerical-summaries-and-visualizations" class="level1">
+<h1>Numerical summaries and visualizations</h1>
+<section id="numerical-summarycount-of-restaurants-in-each-data-set" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summarycount-of-restaurants-in-each-data-set">Numerical Summary(Count of restaurants in each data set)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we will have to filter this whole data set so that we only get the restaurants that we want to use. </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fast_food_locations <span class="sc">%&gt;%</span>  <span class="co">#first three pages of restaurants here are all in the 'menu_items' data set below</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;=</span> <span class="dv">42</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30 × 2
+   name            count
+   &lt;chr&gt;           &lt;int&gt;
+ 1 McDonald's       1898
+ 2 Taco Bell        1032
+ 3 Burger King       833
+ 4 Subway            776
+ 5 Arby's            663
+ 6 Wendy's           628
+ 7 Jack in the Box   330
+ 8 Pizza Hut         230
+ 9 Dairy Queen       218
+10 Domino's Pizza    215
+# ℹ 20 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># might want to filter out the drinks, shareable items, etc. </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>menu_stat <span class="sc">%&gt;%</span>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(restaurant) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 96 × 2
+   restaurant         count
+   &lt;chr&gt;              &lt;int&gt;
+ 1 Starbucks           4504
+ 2 Dunkin' Donuts      3707
+ 3 Wawa                2685
+ 4 Sheetz              2429
+ 5 Sonic               1605
+ 6 Jersey Mike's Subs  1594
+ 7 Golden Corral       1395
+ 8 Pizza Hut           1217
+ 9 Papa John's         1207
+10 Firehouse Subs      1156
+# ℹ 86 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="numerical-summarymean-nutritional-facts-for-each-restaurant" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summarymean-nutritional-facts-for-each-restaurant">Numerical Summary(Mean nutritional facts for each restaurant)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We could make a healthy/non-healthy binary variable, but that's relative. </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>average_nutritionalFacts_ForRestaurants <span class="ot">&lt;-</span> menu_stat <span class="sc">%&gt;%</span>  <span class="co">#might want to filter only the things that are not shareable, because the shareable items will probably make the averages go up because they are larger.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Year, restaurant, Item_Name, Restaurant_Item_Name, Food_Category, Calories, Total_Fat, Saturated_Fat, Trans_Fat, Cholesterol, Sodium, Potassium, Carbohydrates, Protein, Sugar, Limited_Time_Offer, Shareable) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#CODE TO FILTER OUT NA'S</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Calories), <span class="sc">!</span><span class="fu">is.na</span>(Total_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Saturated_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Trans_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Cholesterol), <span class="sc">!</span><span class="fu">is.na</span>(Sodium), <span class="sc">!</span><span class="fu">is.na</span>(Carbohydrates), <span class="sc">!</span><span class="fu">is.na</span>(Protein), <span class="sc">!</span><span class="fu">is.na</span>(Sugar)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(restaurant) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cal =</span> <span class="fu">mean</span>(Calories), <span class="at">Tfat =</span> <span class="fu">mean</span>(Total_Fat), <span class="at">Sfat =</span> <span class="fu">mean</span>(Saturated_Fat), <span class="at">TRfat =</span> <span class="fu">mean</span>(Trans_Fat), <span class="at">Chol =</span> <span class="fu">mean</span>(Cholesterol), <span class="at">Sod =</span> <span class="fu">mean</span>(Sodium), <span class="at">Carb =</span> <span class="fu">mean</span>(Carbohydrates), <span class="at">Prot =</span> <span class="fu">mean</span>(Protein), <span class="at">Sug =</span> <span class="fu">mean</span>(Sugar)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cal))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(average_nutritionalFacts_ForRestaurants, <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 10
+   restaurant               cal  Tfat  Sfat  TRfat  Chol   Sod  Carb  Prot   Sug
+   &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Hooters                1080.  62.4 17.8  0.671  247.  1990.  69.6  60.9 11.0 
+ 2 Sbarro                 1033.  45.9 16.9  0.399  134.  2365. 114.   42.6 31.4 
+ 3 Famous Dave's           996.  59.9 17.7  0.882  201.  2744.  64.1  55.4 24.4 
+ 4 O'Charley's             918.  57.4 18.6  0.965  205.  1684.  65.3  34.4 27.0 
+ 5 Romano's Macaroni Gri…  795.  48.8 17.7  0.457  162   1387.  56.2  34.7  8.33
+ 6 Dickey's Barbeque Pit   788.  44.9 22.8  0.752  131.  2147.  52.7  40.5 16.0 
+ 7 Yard House              685.  38.5 12.2  0.559  111.  1124.  50.5  29.8 17.8 
+ 8 Outback Steakhouse      635.  39.2 16.8  0.941  132.  1142.  36.0  35.3 11.3 
+ 9 Joe's Crab Shack        628.  33.8  9.06 0.0376 135.  1144.  51.3  33.0 16.9 
+10 PF Chang's              612.  27.1  6.17 0.132  102.  2033.  65.9  28.4 24.4 
+11 Carrabba's Italian Gr…  602.  30.5 11.6  0.330   88.8 1425.  52.2  27.1  9.32
+12 Zaxby's                 602.  27.6  5.17 0.364  104.  1545.  56.9  33.4 31.6 </code></pre>
+</div>
+</div>
+</section>
+<section id="numerical-summarymean-nutritional-facts-for-each-type-of-food" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summarymean-nutritional-facts-for-each-type-of-food">Numerical Summary(Mean nutritional facts for each type of food)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We could make a healthy/non-healthy binary variable, but that's relative. </span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>average_nutritionalFacts_ForFoodTypes <span class="ot">&lt;-</span> menu_stat <span class="sc">%&gt;%</span>  <span class="co">#might want to filter only the things that are not shareable, because the shareable items will probably make the averages go up because they are larger. </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Year, restaurant, Item_Name, Restaurant_Item_Name, Food_Category, Calories, Total_Fat, Saturated_Fat, Trans_Fat, Cholesterol, Sodium, Potassium, Carbohydrates, Protein, Sugar, Limited_Time_Offer, Shareable) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Calories), <span class="sc">!</span><span class="fu">is.na</span>(Total_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Saturated_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Trans_Fat), <span class="sc">!</span><span class="fu">is.na</span>(Cholesterol), <span class="sc">!</span><span class="fu">is.na</span>(Sodium), <span class="sc">!</span><span class="fu">is.na</span>(Carbohydrates), <span class="sc">!</span><span class="fu">is.na</span>(Protein), <span class="sc">!</span><span class="fu">is.na</span>(Sugar)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Food_Category) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">cal =</span> <span class="fu">mean</span>(Calories), <span class="at">Tfat =</span> <span class="fu">mean</span>(Total_Fat), <span class="at">Sfat =</span> <span class="fu">mean</span>(Saturated_Fat), <span class="at">TRfat =</span> <span class="fu">mean</span>(Trans_Fat), <span class="at">Chol =</span> <span class="fu">mean</span>(Cholesterol), <span class="at">Sod =</span> <span class="fu">mean</span>(Sodium), <span class="at">Carb =</span> <span class="fu">mean</span>(Carbohydrates), <span class="at">Prot =</span> <span class="fu">mean</span>(Protein), <span class="at">Sug =</span> <span class="fu">mean</span>(Sugar)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(cal))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(average_nutritionalFacts_ForFoodTypes, <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 10
+   Food_Category            cal  Tfat  Sfat  TRfat  Chol   Sod  Carb  Prot   Sug
+   &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Burgers                 736. 42.8  15.4  1.27   115.  1414. 52.2  35.4  12.8 
+ 2 Entrees                 672. 36.0  11.8  1.29   161.  1555. 52.2  36.0  11.8 
+ 3 Sandwiches              595. 29.6  10.1  0.232  110.  1557. 51.8  30.6   7.40
+ 4 Desserts                565. 27.7  15.0  0.460   77.1  317. 72.6   8.47 52.2 
+ 5 Appetizers &amp; Sides      528. 31.0   8.39 0.249   92.9 1310. 39.2  24.2   8.65
+ 6 Fried Potatoes          491. 27.6   6.62 0.373   16.8  906. 51.7   8.12  2.49
+ 7 Salads                  488. 31.0   7.98 0.159   90.7 1047. 28.3  26.0   9.60
+ 8 Pizza                   371. 16.3   7.04 0.0976  41.6  867. 39.2  16.8   4.36
+ 9 Baked Goods             316. 12.1   4.66 0.0832  15.2  449. 45.6   6.48 14.2 
+10 Soup                    303. 15.1   6.81 0.378   46.5 1300. 29.8  12.5   5.49
+11 Beverages               282.  6.03  3.75 0.0612  17.8  138. 51.5   4.17 46.1 
+12 Toppings &amp; Ingredients  118.  6.87  2.05 0.121   16.7  298.  9.77  4.50  4.21</code></pre>
+</div>
+</div>
+</section>
+<section id="numerical-summarynumber-of-fast-food-restaurants-in-each-state" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summarynumber-of-fast-food-restaurants-in-each-state">Numerical Summary(Number of fast food restaurants in each state)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fast_food_locations <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(province) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Number Of FF restaurants in that state</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="st">`</span><span class="at">Number Of FF restaurants in that state</span><span class="st">`</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 50 × 2
+   province `Number Of FF restaurants in that state`
+   &lt;chr&gt;                                       &lt;int&gt;
+ 1 CA                                           1201
+ 2 TX                                            811
+ 3 FL                                            621
+ 4 OH                                            522
+ 5 GA                                            420
+ 6 IL                                            405
+ 7 PA                                            383
+ 8 MI                                            374
+ 9 NY                                            352
+10 AZ                                            330
+# ℹ 40 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="numerical-summarynumber-of-fast-food-restaurants-in-the-northern-united-states-versus-southern-united-states" class="level2">
+<h2 class="anchored" data-anchor-id="numerical-summarynumber-of-fast-food-restaurants-in-the-northern-united-states-versus-southern-united-states">Numerical Summary(Number of fast food restaurants in the Northern United States versus Southern United States)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fast_food_locations <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">North_OR_South =</span> <span class="fu">ifelse</span>(latitude <span class="sc">&gt;</span> <span class="fl">37.5</span>, <span class="st">"North"</span>, <span class="st">"South"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(North_OR_South) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percentage =</span> count<span class="sc">/</span><span class="fu">sum</span>(count)<span class="sc">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  North_OR_South count percentage
+  &lt;chr&gt;          &lt;int&gt;      &lt;dbl&gt;
+1 North           5112       51.1
+2 South           4888       48.9</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizationbarchart-with-the-most-popular-fastfood-restaurants" class="level2">
+<h2 class="anchored" data-anchor-id="visualizationbarchart-with-the-most-popular-fastfood-restaurants">Visualization(Barchart with the most popular fastfood restaurants)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fast_food_locations <span class="sc">%&gt;%</span>  </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;=</span> <span class="dv">215</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> name, <span class="at">y =</span> count), <span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Name of Restaurant"</span>, <span class="at">y =</span> <span class="st">"Number of Locations in the Dataset"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Phase1_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizationaverage-amount-of-calories-in-a-fast-food-menu-item" class="level2">
+<h2 class="anchored" data-anchor-id="visualizationaverage-amount-of-calories-in-a-fast-food-menu-item">Visualization(Average amount of calories in a fast food menu item)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>average_nutritionalFacts_ForRestaurants <span class="sc">%&gt;%</span>  </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">x =</span> cal), <span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">color =</span> <span class="st">"lightblue"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Calories"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>, <span class="at">title =</span> <span class="st">"Average Calories in Each Menu Item"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Phase1_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizationhow-does-type-of-food-effect-the-calories" class="level2">
+<h2 class="anchored" data-anchor-id="visualizationhow-does-type-of-food-effect-the-calories">Visualization(How does type of food effect the calories?)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>average_nutritionalFacts_ForFoodTypes <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> Food_Category, <span class="at">y =</span> cal), <span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Name of Restaurant"</span>, <span class="at">y =</span> <span class="st">"Number of Locations in the Dataset"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Phase1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="what-did-we-learn-from-our-exploratory-data-analysis" class="level1">
+<h1>What Did we Learn from our Exploratory Data Analysis?</h1>
+<blockquote class="blockquote">
+<p>The locations of fast food restaurants in this dataset are almost equally spread out among the northern and southern United States. The northern part of the United States has 51% of the fast food restaurants in that dataset, and the southern half of the United States has 49% percent of the restaurants in this dataset. Almost all of the fast food locations in this sample of restaurants are located in metropolitan areas across the country. California has by far the most fast food restaurants in this datasets by almost 400 restaurants. When looking at locations for each restaurants, McDonald’s has by far the most locations/observations in the dataset. Lastly, the first thing we noticed after examining the datasets about menu items is that there is a wide range of nutritional contents among all of the different possible menu items. The possible calorie count among fast food items can range anywhere from 0 to over 1000 calories.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
