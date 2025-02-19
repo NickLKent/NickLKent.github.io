@@ -39,3 +39,13 @@ Are there better/healthier caloric fast food restaurants?
 [<button>Explore Part 1 of analysis</button>](SP4/Final_Phase1.html)
 [<button>Explore Part 2 of analysis</button>](SP4/Final_Phase2.html)
 :::
+
+###  Genome Wide Association Study {style="color: #158CBA"}
+
+:::{.project-layout}
+STAT 494 - Content Summary #1
+
+[<button>Explore a GWAS Simulation + Summary</button>](SP5/ContentSummary_NoAssoc.html)
+
+[<button>Explore a GWAS Simulation + Summary(Outcome depends on SNP)</button>](SP5/ContentSummary_YesAssoc.html)
+:::
