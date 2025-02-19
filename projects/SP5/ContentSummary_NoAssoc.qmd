@@ -1,0 +1,266 @@
+---
+title: "Content Summary #1"
+author: "Nick Kent"
+format: html
+editor: visual
+---
+
+# Definitions
+
+***Genotype*** - Genetic makeup of an organism, or an organisms specific DNA sequence.\
+\
+***Phenotype*** - Observable characteristics of an organism resulting from it's genotype.\
+\
+***Nucleotide*** - The building blocks of DNA. 4 types: Adenine(A), Thymine(T), Guanine(G), Cystosine(C). Adenine and Thymine always pair together, and Guanine and Cystosine always pair together. Nucleotides play a large role in expressing genetic information. **We tend to only look at oneside of the double-helix(ex: A G T C or T C A G) because we know that if an A is present on one side, the other side will be a T.**\
+\
+***Gene*** - Specific sequence of nucleotides that code for a specific trait. Also can be thought of as a segment of DNA.\
+\
+***Genetic Variant*** - Places where two humans genes differ. AT **GC** TA vs AT **AT** TA\
+\
+***Single nucleotide variant(SNV)*** - A type of genetic variant that occurs when a single nucleotide (adenine, thymine, cytosine, or guanine) in the genome sequence differs.\
+\
+***Allele*** - For a given SNV, an allele is the different possible nucleotides at that position(ex: A & G or C & T). At each position you have two alleles because you inherit one from each parent.\
+\
+***Single Nucleotide Polymorphism(SNP)*** - Type of genetic variant where the minor allele has an MAF \> 1%. A SNP is a variation where a single nucleotide at a specific position in the DNA sequence differs between individuals.\
+\
+***Major Allele*** - More common allele in a location/variant.\
+\
+***Minor Allele*** - Less common allele in a location/variant. Minor allele is found by taking the combination of both alleles in each position(one from each parent) and then added up the total for each nucleotide in position one and then total for each nucleotide in position two, and then whichever one is least common is the minor allele.
+
+| Person   | Father Allele | Mother Allele |
+|----------|---------------|---------------|
+| Person 1 | A             | A             |
+| Person 2 | A             | G             |
+| Person 3 | G             | A             |
+| Person 4 | A             | A             |
+| Person 5 | G             | G             |
+| Person 6 | A             | A             |
+
+\
+Total A's: 8\
+Total G's: 4\
+Minor allele: G\
+Major allele: A\
+\
+
+| Person   | Minor Alleles |
+|----------|---------------|
+| Person 1 | 0             |
+| Person 2 | 1             |
+| Person 3 | 1             |
+| Person 4 | 0             |
+| Person 5 | 2             |
+| Person 6 | 0             |
+
+\
+\
+***Minor Allele Frequency*** - Frequency of the minor allele in a population.
+
+# Experiment
+
+We are going to do a fake genome wide association study to find out if there are any genetic variants that are correlated with someones IQ score. NOTE: all of the genetic data is going to be randomly generated, and every person is going to be assigned a random IQ score.
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(broom)
+library(qqman)
+```
+
+## Step 1: Study Design
+
+We are going to be using 100 "people" in this study. For each person we are going to gather 230,000 SNP's(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.
+
+## Step 2: Construct genotype for n observations
+
+In each position(SNP) an observation either gets a AG, GA, AA, GG, each A/G represents what they got from each parent in that position(A or G from parent #1, and an A or G from parent #2).
+
+First, for each SNP(or nucleotide) we have to come up with a probability of getting an A or G as one of your alleles. The probability of getting an A is a randomly chosen number from 0 to 1, and on the flip side the probability of getting a G is 1-(probability of getting an A).
+
+```{r}
+set.seed(42)
+
+# Number of people, SNPs per chromosome, and chromosomes
+num_people <- 100
+num_snps_per_chr <- 10000
+num_chromosomes <- 23
+
+snp_grid <- expand_grid(
+  Chromosome = 1:num_chromosomes,
+  Position = 1:num_snps_per_chr
+) %>%
+  mutate(
+    SNP_ID = row_number(),
+    prob_A = runif(n(), 0, 1)
+  ) %>%
+  mutate(prob_G = 1 - prob_A) 
+
+head(snp_grid)
+```
+
+Now, using the probabilities for an A and G in each SNP position, we are going to assign everyone 2 alleles(one from each parent) at each position.
+
+```{r creating-genotypes}
+# Create person data with SNPs and varying probabilities
+people_data <- tibble(Person_ID = 1:num_people) %>%
+  crossing(snp_grid) %>%
+  mutate(
+    Allele_1 = ifelse(runif(n()) < prob_A, "A", "G"),
+    Allele_2 = ifelse(runif(n()) < prob_A, "A", "G")
+  )
+
+head(people_data)
+```
+
+Once everyone has two alleles at each position, we are going to count the number of each allele that everyone has at every position(ex. two A's, one A, two G's, etc.). Then we can add up across the whole population to figure out which allele is less common at that SNP, and we can also calculate the minor allele frequency at each SNP.
+
+```{r identifying-MA}
+# Identify the minor allele for each SNP
+minor_alleles <- people_data %>%
+  group_by(SNP_ID) %>%
+  mutate(
+    count_A = sum(Allele_1 == "A" | Allele_2 == "A"), 
+    count_G = sum(Allele_1 == "G" | Allele_2 == "G")
+  ) %>%
+  mutate(
+    Minor_Allele = if_else(count_A < count_G, "A", "G"), 
+    MAF = pmin(count_A, count_G) / (2 * num_people)
+  ) %>%
+  select(SNP_ID, Minor_Allele, MAF) %>%
+  distinct()
+
+# NOTE: This is part of quality control
+minor_alleles <- minor_alleles %>% 
+  filter(MAF != 0)
+
+head(minor_alleles)
+```
+
+Once we know the minor allele for each SNP, we can calculate the number of minor alleles that each person has at each position. These will become our predictor variables for our regression models.
+
+```{r counting-MA}
+# Counting the minor alleles at each SNP position
+minor_allele_counts <- people_data %>%
+  left_join(minor_alleles, by = "SNP_ID") %>%
+  mutate(
+    Minor_Allele_Count = 
+      (Minor_Allele == Allele_1) + (Minor_Allele == Allele_2)  # Vectorized count
+  ) %>%
+  select(Person_ID, SNP_ID, Minor_Allele_Count) %>%  # Keep only necessary columns
+  pivot_wider(names_from = SNP_ID, values_from = Minor_Allele_Count)
+
+head(minor_allele_counts)
+```
+
+## Step 3: Quality control
+
+We want to filter out all of the SNP that dont have a minor allele, meaning everyone has the same alleles at that position.
+
+```{r doing-QC}
+filtered_snps <- minor_alleles$SNP_ID  # SNPs with nonzero MAF
+
+# Remove columns that are no longer in minor_allele_counts due to filtering
+valid_columns <- intersect(names(minor_allele_counts), as.character(filtered_snps))
+
+# Select only the valid columns (Person_ID + SNP columns) and remove columns that are all NA
+minor_allele_counts <- minor_allele_counts %>%
+  select(Person_ID, all_of(valid_columns)) %>%
+  select(where(~ !all(is.na(.))))
+
+head(minor_allele_counts)
+```
+
+## Step 4: Multiple testing consideration
+
+We need to come up with a new significance threshold. Because we are running so many regression models we want to avoid getting too many false positives. For example, if we had a significance threshold of $\alpha$ = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E's) = 1 - (1- $\alpha$ ) \^ 230000 $\approx$ 1. This means that if we were to use a significance threshold of $\alpha$ = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.\
+\
+Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we conducted.\
+\
+\
+Significance threshold ($\alpha$)= 0.05 / 227642 = 2.196431e-07\
+\
+P(at least one T1E) = 1 - (1 - 2.196431e-07) \^ 230000 $\approx$ 0.05\
+\
+So with this significance threshold we can keep our family wise error rate close to 0.05.
+
+## Step 5: Create quantitative outcome variable
+
+Now, we are going to create a random outcome variable. In this case, everyone is going to receive a fake IQ score that is randomly chosen from a distribution centered at 100.
+
+```{r creating quantitative variables}
+minor_allele_counts <- minor_allele_counts %>% 
+  mutate(IQ = rnorm(n(), mean = 100, sd = 15))
+```
+
+## Step 6: Run marginal regression
+
+Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP. The regression formula for each SNP will look something like:\
+\
+$E[IQ | \text{Minor Allele Count}] = \beta_0 + \beta_1 \cdot \text{(Number of Minor Alleles at Certain SNP)}$
+
+```{r fitting-models}
+IQ <- minor_allele_counts$IQ
+X <- as.matrix(minor_allele_counts %>% select(-IQ, -Person_ID))  # Convert predictors to a matrix
+
+# Initialize vectors to store results
+num_snps <- ncol(X)
+all_betas <- numeric(num_snps)
+all_ses <- numeric(num_snps)
+all_tstats <- numeric(num_snps)
+all_pvals <- numeric(num_snps)
+
+# Run marginal regressions efficiently
+for (i in 1:num_snps) {
+  model <- lm(IQ ~ X[, i])  # Fit a simple regression model for each predictor
+  
+  coefinfo <- tidy(model)  # Extract coefficients
+  
+  all_betas[i] <- coefinfo$estimate[2]
+  all_ses[i] <- coefinfo$std.error[2]
+  all_tstats[i] <- coefinfo$statistic[2]
+  all_pvals[i] <- coefinfo$p.value[2]
+  
+  if (i %% 10000 == 0) print(paste("Analyzing predictor", i))  # Progress update
+}
+
+# Create results data frame
+results <- tibble(
+  SNP_ID = as.integer(colnames(X)),
+  Beta = all_betas,
+  SE = all_ses,
+  T_Stat = all_tstats,
+  P_Value = all_pvals
+)
+
+# View top predictors by significance
+results %>% arrange(P_Value) %>% head(10)
+```
+
+```{r}
+# Double checking that it is correct
+tidy(lm(IQ ~ `1726`, data = minor_allele_counts))
+```
+
+## Step 7: One final dataset
+
+```{r final-dataset}
+final_results <- minor_alleles %>% 
+  left_join(results, by="SNP_ID") %>% 
+  left_join(snp_grid, by="SNP_ID") %>% 
+  select(SNP_ID, Minor_Allele, MAF, Chromosome, Position, P_Value)
+```
+
+## Step 8: Create visualizations(Manhattan Plot(Using "ggplot") + QQ Plot)
+
+```{r manhattan-plot, warning=FALSE}
+final_results %>% 
+  mutate(Chromosome = as.factor(`Chromosome`)) %>% 
+  ggplot(aes(x = SNP_ID, y = -log10(P_Value), color = Chromosome))+
+  geom_point()+
+  geom_hline(yintercept = -log10(2.196431e-07), linetype = "dashed", color = "Pink")
+```
+
+```{r qq-plot}
+qq(final_results$P_Value, main = "Q-Q plot of GWAS p-values", xlim = c(0, 7), ylim = c(0,
+    12), pch = 18, col = "blue4", cex = 1, las = 1)
+```
