@@ -60,17 +60,19 @@ Major allele: A\
 
 We are going to do a fake genome wide association study to find out if there are any genetic variants that are correlated with someones IQ score. NOTE: all of the genetic data is going to be randomly generated, and every person is going to be assigned a random IQ score.
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(dplyr)
 library(broom)
 library(qqman)
 ```
-
+\
+\
 ## Step 1: Study Design
 
-We are going to be using 100 "people" in this study. For each person we are going to gather 230,000 SNP's(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.
-
+We are going to be using 100 "people" in this simulation study to walk through the desing of a GWAS. For each person we are going to gather 230,000 SNP's(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.
+\
+\
 ## Step 2: Construct genotype for n observations
 
 In each position(SNP) an observation either gets a AG, GA, AA, GG, each A/G represents what they got from each parent in that position(A or G from parent #1, and an A or G from parent #2).
@@ -151,7 +153,8 @@ minor_allele_counts <- people_data %>%
 
 head(minor_allele_counts)
 ```
-
+\
+\
 ## Step 3: Quality control
 
 We want to filter out all of the SNP that dont have a minor allele, meaning everyone has the same alleles at that position.
@@ -169,20 +172,23 @@ minor_allele_counts <- minor_allele_counts %>%
 
 head(minor_allele_counts)
 ```
-
+\
+\
 ## Step 4: Multiple testing consideration
 
-We need to come up with a new significance threshold. Because we are running so many regression models we want to avoid getting too many false positives. For example, if we had a significance threshold of $\alpha$ = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E's) = 1 - (1- $\alpha$ ) \^ 230000 $\approx$ 1. This means that if we were to use a significance threshold of $\alpha$ = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.\
-\
-Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we conducted.\
+We need to come up with a new significance threshold because we are running so many regression models we need to avoid getting too many false positives. For example, if we had a significance threshold of $\alpha$ = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E's) = $1 - (1- \alpha ) ^{230000}$ $\approx$ 1. This means that if we were to use a significance threshold of $\alpha$ = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.
 \
 \
-Significance threshold ($\alpha$)= 0.05 / 227642 = 2.196431e-07\
+Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low or as low as we want it. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we will conduct.\
 \
-P(at least one T1E) = 1 - (1 - 2.196431e-07) \^ 230000 $\approx$ 0.05\
+\
+Significance threshold ($\alpha$)= 0.05 / 227642 = $2.196431e^{-07}$\
+\
+P(at least one T1E) = $1 - (1 - 2.196431e^{-07})^{230000}$ $\approx$ 0.05\
 \
 So with this significance threshold we can keep our family wise error rate close to 0.05.
-
+\
+\
 ## Step 5: Create quantitative outcome variable
 
 Now, we are going to create a random outcome variable. In this case, everyone is going to receive a fake IQ score that is randomly chosen from a distribution centered at 100.
@@ -192,9 +198,20 @@ minor_allele_counts <- minor_allele_counts %>%
   mutate(IQ = rnorm(n(), mean = 100, sd = 15))
 ```
 
+\
+So, the hypothesis we are going to be testing at each SNP is:
+\
+$H_O$ = There IS NO association between SNP of interest and outcome variable, IQ score. 
+\
+$H_A$ = There IS association between SNP of interest and outcome variable, IQ score.
+\
+Using our calculated significance threshold of $2.196431e^{-07}$, we will either accept/reject the null hypothesis for each SNP.
+\
+\
 ## Step 6: Run marginal regression
 
-Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP. The regression formula for each SNP will look something like:\
+Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP in order to test the hypothesis, this will allow us to find out if there is association between any SNP's and IQ score. The regression formula for each SNP will look something like:
+\
 \
 $E[IQ | \text{Minor Allele Count}] = \beta_0 + \beta_1 \cdot \text{(Number of Minor Alleles at Certain SNP)}$
 
@@ -236,13 +253,10 @@ results <- tibble(
 results %>% arrange(P_Value) %>% head(10)
 ```
 
-```{r}
-# Double checking that it is correct
-tidy(lm(IQ ~ `1726`, data = minor_allele_counts))
-```
-
+Above are the ten most significant results from our study. 
+\
+\
 ## Step 7: One final dataset
-
 ```{r final-dataset}
 final_results <- minor_alleles %>% 
   left_join(results, by="SNP_ID") %>% 
@@ -250,6 +264,8 @@ final_results <- minor_alleles %>%
   select(SNP_ID, Minor_Allele, MAF, Chromosome, Position, P_Value)
 ```
 
+\
+\
 ## Step 8: Create visualizations(Manhattan Plot(Using "ggplot") + QQ Plot)
 
 ```{r manhattan-plot, warning=FALSE}
