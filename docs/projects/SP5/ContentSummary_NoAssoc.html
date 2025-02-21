@@ -185,17 +185,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#definitions" id="toc-definitions" class="nav-link active" data-scroll-target="#definitions">Definitions</a></li>
-  <li><a href="#experiment" id="toc-experiment" class="nav-link" data-scroll-target="#experiment">Experiment</a>
-  <ul class="collapse">
-  <li><a href="#step-1-study-design" id="toc-step-1-study-design" class="nav-link" data-scroll-target="#step-1-study-design">Step 1: Study Design</a></li>
-  <li><a href="#step-2-construct-genotype-for-n-observations" id="toc-step-2-construct-genotype-for-n-observations" class="nav-link" data-scroll-target="#step-2-construct-genotype-for-n-observations">Step 2: Construct genotype for n observations</a></li>
-  <li><a href="#step-3-quality-control" id="toc-step-3-quality-control" class="nav-link" data-scroll-target="#step-3-quality-control">Step 3: Quality control</a></li>
-  <li><a href="#step-4-multiple-testing-consideration" id="toc-step-4-multiple-testing-consideration" class="nav-link" data-scroll-target="#step-4-multiple-testing-consideration">Step 4: Multiple testing consideration</a></li>
-  <li><a href="#step-5-create-quantitative-outcome-variable" id="toc-step-5-create-quantitative-outcome-variable" class="nav-link" data-scroll-target="#step-5-create-quantitative-outcome-variable">Step 5: Create quantitative outcome variable</a></li>
-  <li><a href="#step-6-run-marginal-regression" id="toc-step-6-run-marginal-regression" class="nav-link" data-scroll-target="#step-6-run-marginal-regression">Step 6: Run marginal regression</a></li>
-  <li><a href="#step-7-one-final-dataset" id="toc-step-7-one-final-dataset" class="nav-link" data-scroll-target="#step-7-one-final-dataset">Step 7: One final dataset</a></li>
-  <li><a href="#step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" id="toc-step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" class="nav-link" data-scroll-target="#step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot">Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</a></li>
-  </ul></li>
+  <li><a href="#experiment" id="toc-experiment" class="nav-link" data-scroll-target="#experiment">Experiment</a></li>
   </ul>
 </nav>
     </div>
@@ -337,58 +327,33 @@ Major allele: A<br>
 <section id="experiment" class="level1">
 <h1>Experiment</h1>
 <p>We are going to do a fake genome wide association study to find out if there are any genetic variants that are correlated with someones IQ score. NOTE: all of the genetic data is going to be randomly generated, and every person is going to be assigned a random IQ score.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.0.4     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(qqman)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-For example usage please run: vignette('qqman')
-
-Citation appreciated but not required:
-Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and manhattan plots. Journal of Open Source Software, 3(25), 731, https://doi.org/10.21105/joss.00731.</code></pre>
-</div>
-</div>
-<section id="step-1-study-design" class="level2">
-<h2 class="anchored" data-anchor-id="step-1-study-design">Step 1: Study Design</h2>
-<p>We are going to be using 100 “people” in this study. For each person we are going to gather 230,000 SNP’s(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.</p>
-</section>
-<section id="step-2-construct-genotype-for-n-observations" class="level2">
-<h2 class="anchored" data-anchor-id="step-2-construct-genotype-for-n-observations">Step 2: Construct genotype for n observations</h2>
+<p><br>
+<br>
+## Step 1: Study Design</p>
+<p>We are going to be using 100 “people” in this simulation study to walk through the desing of a GWAS. For each person we are going to gather 230,000 SNP’s(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.<br>
+<br>
+## Step 2: Construct genotype for n observations</p>
 <p>In each position(SNP) an observation either gets a AG, GA, AA, GG, each A/G represents what they got from each parent in that position(A or G from parent #1, and an A or G from parent #2).</p>
 <p>First, for each SNP(or nucleotide) we have to come up with a probability of getting an A or G as one of your alleles. The probability of getting an A is a randomly chosen number from 0 to 1, and on the flip side the probability of getting a G is 1-(probability of getting an A).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of people, SNPs per chromosome, and chromosomes</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>num_people <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>num_snps_per_chr <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>num_chromosomes <span class="ot">&lt;-</span> <span class="dv">23</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>snp_grid <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chromosome =</span> <span class="dv">1</span><span class="sc">:</span>num_chromosomes,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Position =</span> <span class="dv">1</span><span class="sc">:</span>num_snps_per_chr</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">SNP_ID =</span> <span class="fu">row_number</span>(),</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob_A =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prob_G =</span> <span class="dv">1</span> <span class="sc">-</span> prob_A) </span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(snp_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of people, SNPs per chromosome, and chromosomes</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>num_people <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>num_snps_per_chr <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>num_chromosomes <span class="ot">&lt;-</span> <span class="dv">23</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>snp_grid <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Chromosome =</span> <span class="dv">1</span><span class="sc">:</span>num_chromosomes,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Position =</span> <span class="dv">1</span><span class="sc">:</span>num_snps_per_chr</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">SNP_ID =</span> <span class="fu">row_number</span>(),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob_A =</span> <span class="fu">runif</span>(<span class="fu">n</span>(), <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prob_G =</span> <span class="dv">1</span> <span class="sc">-</span> prob_A) </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(snp_grid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
   Chromosome Position SNP_ID prob_A prob_G
@@ -403,15 +368,15 @@ Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and m
 </div>
 <p>Now, using the probabilities for an A and G in each SNP position, we are going to assign everyone 2 alleles(one from each parent) at each position.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create person data with SNPs and varying probabilities</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>people_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Person_ID =</span> <span class="dv">1</span><span class="sc">:</span>num_people) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crossing</span>(snp_grid) <span class="sc">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allele_1 =</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="fu">n</span>()) <span class="sc">&lt;</span> prob_A, <span class="st">"A"</span>, <span class="st">"G"</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allele_2 =</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="fu">n</span>()) <span class="sc">&lt;</span> prob_A, <span class="st">"A"</span>, <span class="st">"G"</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(people_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create person data with SNPs and varying probabilities</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>people_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Person_ID =</span> <span class="dv">1</span><span class="sc">:</span>num_people) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crossing</span>(snp_grid) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allele_1 =</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="fu">n</span>()) <span class="sc">&lt;</span> prob_A, <span class="st">"A"</span>, <span class="st">"G"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Allele_2 =</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="fu">n</span>()) <span class="sc">&lt;</span> prob_A, <span class="st">"A"</span>, <span class="st">"G"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(people_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 8
   Person_ID Chromosome Position SNP_ID prob_A prob_G Allele_1 Allele_2
@@ -426,25 +391,25 @@ Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and m
 </div>
 <p>Once everyone has two alleles at each position, we are going to count the number of each allele that everyone has at every position(ex. two A’s, one A, two G’s, etc.). Then we can add up across the whole population to figure out which allele is less common at that SNP, and we can also calculate the minor allele frequency at each SNP.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the minor allele for each SNP</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>minor_alleles <span class="ot">&lt;-</span> people_data <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SNP_ID) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">count_A =</span> <span class="fu">sum</span>(Allele_1 <span class="sc">==</span> <span class="st">"A"</span> <span class="sc">|</span> Allele_2 <span class="sc">==</span> <span class="st">"A"</span>), </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">count_G =</span> <span class="fu">sum</span>(Allele_1 <span class="sc">==</span> <span class="st">"G"</span> <span class="sc">|</span> Allele_2 <span class="sc">==</span> <span class="st">"G"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Minor_Allele =</span> <span class="fu">if_else</span>(count_A <span class="sc">&lt;</span> count_G, <span class="st">"A"</span>, <span class="st">"G"</span>), </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAF =</span> <span class="fu">pmin</span>(count_A, count_G) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> num_people)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SNP_ID, Minor_Allele, MAF) <span class="sc">%&gt;%</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This is part of quality control</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>minor_alleles <span class="ot">&lt;-</span> minor_alleles <span class="sc">%&gt;%</span> </span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MAF <span class="sc">!=</span> <span class="dv">0</span>)</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_alleles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the minor allele for each SNP</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>minor_alleles <span class="ot">&lt;-</span> people_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SNP_ID) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">count_A =</span> <span class="fu">sum</span>(Allele_1 <span class="sc">==</span> <span class="st">"A"</span> <span class="sc">|</span> Allele_2 <span class="sc">==</span> <span class="st">"A"</span>), </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">count_G =</span> <span class="fu">sum</span>(Allele_1 <span class="sc">==</span> <span class="st">"G"</span> <span class="sc">|</span> Allele_2 <span class="sc">==</span> <span class="st">"G"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Minor_Allele =</span> <span class="fu">if_else</span>(count_A <span class="sc">&lt;</span> count_G, <span class="st">"A"</span>, <span class="st">"G"</span>), </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">MAF =</span> <span class="fu">pmin</span>(count_A, count_G) <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> num_people)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SNP_ID, Minor_Allele, MAF) <span class="sc">%&gt;%</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: This is part of quality control</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>minor_alleles <span class="ot">&lt;-</span> minor_alleles <span class="sc">%&gt;%</span> </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MAF <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_alleles)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
 # Groups:   SNP_ID [6]
@@ -460,17 +425,17 @@ Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and m
 </div>
 <p>Once we know the minor allele for each SNP, we can calculate the number of minor alleles that each person has at each position. These will become our predictor variables for our regression models.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting the minor alleles at each SNP position</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> people_data <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(minor_alleles, <span class="at">by =</span> <span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Minor_Allele_Count =</span> </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      (Minor_Allele <span class="sc">==</span> Allele_1) <span class="sc">+</span> (Minor_Allele <span class="sc">==</span> Allele_2)  <span class="co"># Vectorized count</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Person_ID, SNP_ID, Minor_Allele_Count) <span class="sc">%&gt;%</span>  <span class="co"># Keep only necessary columns</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> SNP_ID, <span class="at">values_from =</span> Minor_Allele_Count)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_allele_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Counting the minor alleles at each SNP position</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> people_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(minor_alleles, <span class="at">by =</span> <span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Minor_Allele_Count =</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      (Minor_Allele <span class="sc">==</span> Allele_1) <span class="sc">+</span> (Minor_Allele <span class="sc">==</span> Allele_2)  <span class="co"># Vectorized count</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Person_ID, SNP_ID, Minor_Allele_Count) <span class="sc">%&gt;%</span>  <span class="co"># Keep only necessary columns</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> SNP_ID, <span class="at">values_from =</span> Minor_Allele_Count)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_allele_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 230,001
   Person_ID   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`  `11`
@@ -490,22 +455,22 @@ Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and m
 #   `46` &lt;int&gt;, `47` &lt;int&gt;, `48` &lt;int&gt;, `49` &lt;int&gt;, `50` &lt;int&gt;, `51` &lt;int&gt;, …</code></pre>
 </div>
 </div>
-</section>
-<section id="step-3-quality-control" class="level2">
-<h2 class="anchored" data-anchor-id="step-3-quality-control">Step 3: Quality control</h2>
+<p><br>
+<br>
+## Step 3: Quality control</p>
 <p>We want to filter out all of the SNP that dont have a minor allele, meaning everyone has the same alleles at that position.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>filtered_snps <span class="ot">&lt;-</span> minor_alleles<span class="sc">$</span>SNP_ID  <span class="co"># SNPs with nonzero MAF</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove columns that are no longer in minor_allele_counts due to filtering</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>valid_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">names</span>(minor_allele_counts), <span class="fu">as.character</span>(filtered_snps))</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only the valid columns (Person_ID + SNP columns) and remove columns that are all NA</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> minor_allele_counts <span class="sc">%&gt;%</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Person_ID, <span class="fu">all_of</span>(valid_columns)) <span class="sc">%&gt;%</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_allele_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>filtered_snps <span class="ot">&lt;-</span> minor_alleles<span class="sc">$</span>SNP_ID  <span class="co"># SNPs with nonzero MAF</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove columns that are no longer in minor_allele_counts due to filtering</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>valid_columns <span class="ot">&lt;-</span> <span class="fu">intersect</span>(<span class="fu">names</span>(minor_allele_counts), <span class="fu">as.character</span>(filtered_snps))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Select only the valid columns (Person_ID + SNP columns) and remove columns that are all NA</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> minor_allele_counts <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Person_ID, <span class="fu">all_of</span>(valid_columns)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.))))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(minor_allele_counts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 227,591
   Person_ID   `1`   `2`   `3`   `4`   `5`   `6`   `7`   `8`   `9`  `10`  `11`
@@ -525,57 +490,60 @@ Turner, (2018). qqman: an R package for visualizing GWAS results using Q-Q and m
 #   `46` &lt;int&gt;, `47` &lt;int&gt;, `48` &lt;int&gt;, `49` &lt;int&gt;, `50` &lt;int&gt;, `51` &lt;int&gt;, …</code></pre>
 </div>
 </div>
-</section>
-<section id="step-4-multiple-testing-consideration" class="level2">
-<h2 class="anchored" data-anchor-id="step-4-multiple-testing-consideration">Step 4: Multiple testing consideration</h2>
-<p>We need to come up with a new significance threshold. Because we are running so many regression models we want to avoid getting too many false positives. For example, if we had a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E’s) = 1 - (1- <span class="math inline">\(\alpha\)</span> ) ^ 230000 <span class="math inline">\(\approx\)</span> 1. This means that if we were to use a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.<br>
+<p><br>
 <br>
-Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we conducted.<br>
+## Step 4: Multiple testing consideration</p>
+<p>We need to come up with a new significance threshold because we are running so many regression models we need to avoid getting too many false positives. For example, if we had a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E’s) = <span class="math inline">\(1 - (1- \alpha ) ^{230000}\)</span> <span class="math inline">\(\approx\)</span> 1. This means that if we were to use a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.<br>
+<br>
+Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low or as low as we want it. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we will conduct.<br>
 <br>
 <br>
-Significance threshold (<span class="math inline">\(\alpha\)</span>)= 0.05 / 227642 = 2.196431e-07<br>
+Significance threshold (<span class="math inline">\(\alpha\)</span>)= 0.05 / 227642 = <span class="math inline">\(2.196431e^{-07}\)</span><br>
 <br>
-P(at least one T1E) = 1 - (1 - 2.196431e-07) ^ 230000 <span class="math inline">\(\approx\)</span> 0.05<br>
+P(at least one T1E) = <span class="math inline">\(1 - (1 - 2.196431e^{-07})^{230000}\)</span> <span class="math inline">\(\approx\)</span> 0.05<br>
 <br>
-So with this significance threshold we can keep our family wise error rate close to 0.05.</p>
-</section>
-<section id="step-5-create-quantitative-outcome-variable" class="level2">
-<h2 class="anchored" data-anchor-id="step-5-create-quantitative-outcome-variable">Step 5: Create quantitative outcome variable</h2>
+So with this significance threshold we can keep our family wise error rate close to 0.05.<br>
+<br>
+## Step 5: Create quantitative outcome variable</p>
 <p>Now, we are going to create a random outcome variable. In this case, everyone is going to receive a fake IQ score that is randomly chosen from a distribution centered at 100.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> minor_allele_counts <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IQ =</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> minor_allele_counts <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IQ =</span> <span class="fu">rnorm</span>(<span class="fu">n</span>(), <span class="at">mean =</span> <span class="dv">100</span>, <span class="at">sd =</span> <span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="step-6-run-marginal-regression" class="level2">
-<h2 class="anchored" data-anchor-id="step-6-run-marginal-regression">Step 6: Run marginal regression</h2>
-<p>Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP. The regression formula for each SNP will look something like:<br>
+<p><br>
+So, the hypothesis we are going to be testing at each SNP is:<br>
+<span class="math inline">\(H_O\)</span> = There IS NO association between SNP of interest and outcome variable, IQ score.<br>
+<span class="math inline">\(H_A\)</span> = There IS association between SNP of interest and outcome variable, IQ score.<br>
+Using our calculated significance threshold of <span class="math inline">\(2.196431e^{-07}\)</span>, we will either accept/reject the null hypothesis for each SNP.<br>
+<br>
+## Step 6: Run marginal regression</p>
+<p>Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP in order to test the hypothesis, this will allow us to find out if there is association between any SNP’s and IQ score. The regression formula for each SNP will look something like:<br>
 <br>
 <span class="math inline">\(E[IQ | \text{Minor Allele Count}] = \beta_0 + \beta_1 \cdot \text{(Number of Minor Alleles at Certain SNP)}\)</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>IQ <span class="ot">&lt;-</span> minor_allele_counts<span class="sc">$</span>IQ</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(minor_allele_counts <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>IQ, <span class="sc">-</span>Person_ID))  <span class="co"># Convert predictors to a matrix</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize vectors to store results</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>num_snps <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>all_betas <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>all_ses <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>all_tstats <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>all_pvals <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Run marginal regressions efficiently</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_snps) {</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">lm</span>(IQ <span class="sc">~</span> X[, i])  <span class="co"># Fit a simple regression model for each predictor</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  coefinfo <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model)  <span class="co"># Extract coefficients</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  all_betas[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>estimate[<span class="dv">2</span>]</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  all_ses[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>std.error[<span class="dv">2</span>]</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  all_tstats[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>statistic[<span class="dv">2</span>]</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  all_pvals[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>p.value[<span class="dv">2</span>]</span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">%%</span> <span class="dv">10000</span> <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Analyzing predictor"</span>, i))  <span class="co"># Progress update</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>IQ <span class="ot">&lt;-</span> minor_allele_counts<span class="sc">$</span>IQ</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(minor_allele_counts <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>IQ, <span class="sc">-</span>Person_ID))  <span class="co"># Convert predictors to a matrix</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize vectors to store results</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>num_snps <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>all_betas <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>all_ses <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>all_tstats <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>all_pvals <span class="ot">&lt;-</span> <span class="fu">numeric</span>(num_snps)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Run marginal regressions efficiently</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_snps) {</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">lm</span>(IQ <span class="sc">~</span> X[, i])  <span class="co"># Fit a simple regression model for each predictor</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  coefinfo <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model)  <span class="co"># Extract coefficients</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  all_betas[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>estimate[<span class="dv">2</span>]</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  all_ses[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>std.error[<span class="dv">2</span>]</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  all_tstats[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>statistic[<span class="dv">2</span>]</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  all_pvals[i] <span class="ot">&lt;-</span> coefinfo<span class="sc">$</span>p.value[<span class="dv">2</span>]</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">%%</span> <span class="dv">10000</span> <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Analyzing predictor"</span>, i))  <span class="co"># Progress update</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Analyzing predictor 10000"
 [1] "Analyzing predictor 20000"
@@ -600,17 +568,17 @@ So with this significance threshold we can keep our family wise error rate close
 [1] "Analyzing predictor 210000"
 [1] "Analyzing predictor 220000"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create results data frame</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">SNP_ID =</span> <span class="fu">as.integer</span>(<span class="fu">colnames</span>(X)),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Beta =</span> all_betas,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">SE =</span> all_ses,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">T_Stat =</span> all_tstats,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">P_Value =</span> all_pvals</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># View top predictors by significance</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>results <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(P_Value) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create results data frame</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">SNP_ID =</span> <span class="fu">as.integer</span>(<span class="fu">colnames</span>(X)),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Beta =</span> all_betas,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">SE =</span> all_ses,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">T_Stat =</span> all_tstats,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">P_Value =</span> all_pvals</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># View top predictors by significance</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>results <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(P_Value) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 5
    SNP_ID   Beta    SE T_Stat    P_Value
@@ -627,35 +595,24 @@ So with this significance threshold we can keep our family wise error rate close
 10  70805  10.7   2.42   4.44 0.0000240 </code></pre>
 </div>
 </div>
+<p>Above are the ten most significant results from our study.<br>
+<br>
+## Step 7: One final dataset</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Double checking that it is correct</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(<span class="fu">lm</span>(IQ <span class="sc">~</span> <span class="st">`</span><span class="at">1726</span><span class="st">`</span>, <span class="at">data =</span> minor_allele_counts))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 5
-  term        estimate std.error statistic  p.value
-  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-1 (Intercept)   104.        2.49     41.5  5.50e-64
-2 `1726`         -3.35      2.16     -1.55 1.24e- 1</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="ot">&lt;-</span> minor_alleles <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(results, <span class="at">by=</span><span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(snp_grid, <span class="at">by=</span><span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SNP_ID, Minor_Allele, MAF, Chromosome, Position, P_Value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</section>
-<section id="step-7-one-final-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="step-7-one-final-dataset">Step 7: One final dataset</h2>
+<p><br>
+<br>
+## Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="ot">&lt;-</span> minor_alleles <span class="sc">%&gt;%</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(results, <span class="at">by=</span><span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(snp_grid, <span class="at">by=</span><span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SNP_ID, Minor_Allele, MAF, Chromosome, Position, P_Value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" class="level2">
-<h2 class="anchored" data-anchor-id="step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot">Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="sc">%&gt;%</span> </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chromosome =</span> <span class="fu">as.factor</span>(<span class="st">`</span><span class="at">Chromosome</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> SNP_ID, <span class="at">y =</span> <span class="sc">-</span><span class="fu">log10</span>(P_Value), <span class="at">color =</span> Chromosome))<span class="sc">+</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">2.196431e-07</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"Pink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chromosome =</span> <span class="fu">as.factor</span>(<span class="st">`</span><span class="at">Chromosome</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> SNP_ID, <span class="at">y =</span> <span class="sc">-</span><span class="fu">log10</span>(P_Value), <span class="at">color =</span> Chromosome))<span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">2.196431e-07</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"Pink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -665,8 +622,8 @@ So with this significance threshold we can keep our family wise error rate close
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qq</span>(final_results<span class="sc">$</span>P_Value, <span class="at">main =</span> <span class="st">"Q-Q plot of GWAS p-values"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">7</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">12</span>), <span class="at">pch =</span> <span class="dv">18</span>, <span class="at">col =</span> <span class="st">"blue4"</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">las =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qq</span>(final_results<span class="sc">$</span>P_Value, <span class="at">main =</span> <span class="st">"Q-Q plot of GWAS p-values"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">7</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">12</span>), <span class="at">pch =</span> <span class="dv">18</span>, <span class="at">col =</span> <span class="st">"blue4"</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">las =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -677,7 +634,6 @@ So with this significance threshold we can keep our family wise error rate close
 </div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
