@@ -185,7 +185,17 @@ window.Quarto = {
    
   <ul>
   <li><a href="#definitions" id="toc-definitions" class="nav-link active" data-scroll-target="#definitions">Definitions</a></li>
-  <li><a href="#experiment" id="toc-experiment" class="nav-link" data-scroll-target="#experiment">Experiment</a></li>
+  <li><a href="#experiment" id="toc-experiment" class="nav-link" data-scroll-target="#experiment">Experiment</a>
+  <ul class="collapse">
+  <li><a href="#step-1-study-design" id="toc-step-1-study-design" class="nav-link" data-scroll-target="#step-1-study-design">Step 1: Study Design</a></li>
+  <li><a href="#step-2-construct-genotype-for-n-observations" id="toc-step-2-construct-genotype-for-n-observations" class="nav-link" data-scroll-target="#step-2-construct-genotype-for-n-observations">Step 2: Construct genotype for n observations</a></li>
+  <li><a href="#step-3-quality-control" id="toc-step-3-quality-control" class="nav-link" data-scroll-target="#step-3-quality-control">Step 3: Quality control</a></li>
+  <li><a href="#step-4-multiple-testing-consideration" id="toc-step-4-multiple-testing-consideration" class="nav-link" data-scroll-target="#step-4-multiple-testing-consideration">Step 4: Multiple testing consideration</a></li>
+  <li><a href="#step-5-create-quantitative-outcome-variable" id="toc-step-5-create-quantitative-outcome-variable" class="nav-link" data-scroll-target="#step-5-create-quantitative-outcome-variable">Step 5: Create quantitative outcome variable</a></li>
+  <li><a href="#step-6-run-marginal-regression" id="toc-step-6-run-marginal-regression" class="nav-link" data-scroll-target="#step-6-run-marginal-regression">Step 6: Run marginal regression</a></li>
+  <li><a href="#step-7-one-final-dataset" id="toc-step-7-one-final-dataset" class="nav-link" data-scroll-target="#step-7-one-final-dataset">Step 7: One final dataset</a></li>
+  <li><a href="#step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" id="toc-step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" class="nav-link" data-scroll-target="#step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot">Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -322,17 +332,23 @@ Major allele: A<br>
 </table>
 <p><br>
 <br>
-<strong><em>Minor Allele Frequency</em></strong> - Frequency of the minor allele in a population.</p>
+</p>
+<p><strong><em>Minor Allele Frequency</em></strong> - Frequency of the minor allele in a population.</p>
 </section>
 <section id="experiment" class="level1">
 <h1>Experiment</h1>
 <p>We are going to do a fake genome wide association study to find out if there are any genetic variants that are correlated with someones IQ score. NOTE: all of the genetic data is going to be randomly generated, and every person is going to be assigned a random IQ score.</p>
 <p><br>
 <br>
-## Step 1: Study Design</p>
+</p>
+<section id="step-1-study-design" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-study-design">Step 1: Study Design</h2>
 <p>We are going to be using 100 “people” in this simulation study to walk through the desing of a GWAS. For each person we are going to gather 230,000 SNP’s(or nucleotides). This means that for each chromosome we will analyze 10,000 positions.<br>
 <br>
-## Step 2: Construct genotype for n observations</p>
+</p>
+</section>
+<section id="step-2-construct-genotype-for-n-observations" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-construct-genotype-for-n-observations">Step 2: Construct genotype for n observations</h2>
 <p>In each position(SNP) an observation either gets a AG, GA, AA, GG, each A/G represents what they got from each parent in that position(A or G from parent #1, and an A or G from parent #2).</p>
 <p>First, for each SNP(or nucleotide) we have to come up with a probability of getting an A or G as one of your alleles. The probability of getting an A is a randomly chosen number from 0 to 1, and on the flip side the probability of getting a G is 1-(probability of getting an A).</p>
 <div class="cell">
@@ -457,7 +473,10 @@ Major allele: A<br>
 </div>
 <p><br>
 <br>
-## Step 3: Quality control</p>
+</p>
+</section>
+<section id="step-3-quality-control" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-quality-control">Step 3: Quality control</h2>
 <p>We want to filter out all of the SNP that dont have a minor allele, meaning everyone has the same alleles at that position.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>filtered_snps <span class="ot">&lt;-</span> minor_alleles<span class="sc">$</span>SNP_ID  <span class="co"># SNPs with nonzero MAF</span></span>
@@ -492,7 +511,10 @@ Major allele: A<br>
 </div>
 <p><br>
 <br>
-## Step 4: Multiple testing consideration</p>
+</p>
+</section>
+<section id="step-4-multiple-testing-consideration" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-multiple-testing-consideration">Step 4: Multiple testing consideration</h2>
 <p>We need to come up with a new significance threshold because we are running so many regression models we need to avoid getting too many false positives. For example, if we had a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05(which is the norm in many fields) the probability of getting at least one type one error(or false positive): P(At least one T1E) = 1 - P(no T1E’s) = <span class="math inline">\(1 - (1- \alpha ) ^{230000}\)</span> <span class="math inline">\(\approx\)</span> 1. This means that if we were to use a significance threshold of <span class="math inline">\(\alpha\)</span> = 0.05 for 230,000 tests, we are almost guaranteed to get at least one false positive.<br>
 <br>
 Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. This is one way to help keep our the probability of at least one type 1 error(AKA. Family wise error rate) low or as low as we want it. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we will conduct.<br>
@@ -504,7 +526,10 @@ P(at least one T1E) = <span class="math inline">\(1 - (1 - 2.196431e^{-07})^{230
 <br>
 So with this significance threshold we can keep our family wise error rate close to 0.05.<br>
 <br>
-## Step 5: Create quantitative outcome variable</p>
+</p>
+</section>
+<section id="step-5-create-quantitative-outcome-variable" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-create-quantitative-outcome-variable">Step 5: Create quantitative outcome variable</h2>
 <p>Now, we are going to create a random outcome variable. In this case, everyone is going to receive a fake IQ score that is randomly chosen from a distribution centered at 100.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>minor_allele_counts <span class="ot">&lt;-</span> minor_allele_counts <span class="sc">%&gt;%</span> </span>
@@ -516,7 +541,10 @@ So, the hypothesis we are going to be testing at each SNP is:<br>
 <span class="math inline">\(H_A\)</span> = There IS association between SNP of interest and outcome variable, IQ score.<br>
 Using our calculated significance threshold of <span class="math inline">\(2.196431e^{-07}\)</span>, we will either accept/reject the null hypothesis for each SNP.<br>
 <br>
-## Step 6: Run marginal regression</p>
+</p>
+</section>
+<section id="step-6-run-marginal-regression" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-run-marginal-regression">Step 6: Run marginal regression</h2>
 <p>Now, using the count for minor alleles at each SNP, we are going to create 230,000 regression models that estimate IQ score from minor allele counts at each SNP in order to test the hypothesis, this will allow us to find out if there is association between any SNP’s and IQ score. The regression formula for each SNP will look something like:<br>
 <br>
 <span class="math inline">\(E[IQ | \text{Minor Allele Count}] = \beta_0 + \beta_1 \cdot \text{(Number of Minor Alleles at Certain SNP)}\)</span></p>
@@ -597,7 +625,10 @@ Using our calculated significance threshold of <span class="math inline">\(2.196
 </div>
 <p>Above are the ten most significant results from our study.<br>
 <br>
-## Step 7: One final dataset</p>
+</p>
+</section>
+<section id="step-7-one-final-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="step-7-one-final-dataset">Step 7: One final dataset</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="ot">&lt;-</span> minor_alleles <span class="sc">%&gt;%</span> </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(results, <span class="at">by=</span><span class="st">"SNP_ID"</span>) <span class="sc">%&gt;%</span> </span>
@@ -606,7 +637,10 @@ Using our calculated significance threshold of <span class="math inline">\(2.196
 </div>
 <p><br>
 <br>
-## Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</p>
+</p>
+</section>
+<section id="step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot" class="level2">
+<h2 class="anchored" data-anchor-id="step-8-create-visualizationsmanhattan-plotusing-ggplot-qq-plot">Step 8: Create visualizations(Manhattan Plot(Using “ggplot”) + QQ Plot)</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>final_results <span class="sc">%&gt;%</span> </span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Chromosome =</span> <span class="fu">as.factor</span>(<span class="st">`</span><span class="at">Chromosome</span><span class="st">`</span>)) <span class="sc">%&gt;%</span> </span>
@@ -634,6 +668,7 @@ Using our calculated significance threshold of <span class="math inline">\(2.196
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
