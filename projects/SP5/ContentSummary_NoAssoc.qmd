@@ -60,7 +60,7 @@ Major allele: A\
 
 We are going to do a fake genome wide association study to find out if there are any genetic variants that are correlated with someones IQ score. NOTE: all of the genetic data is going to be randomly generated, and every person is going to be assigned a random IQ score.
 
-```{r, message=FALSE}
+```{r, message=FALSE, echo=FALSE}
 library(tidyverse)
 library(dplyr)
 library(broom)
