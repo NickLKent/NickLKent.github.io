@@ -4,35 +4,35 @@
     "href": "about.html",
     "title": "Resume",
     "section": "",
-    "text": "Macalester College | St. Paul, MN\nMajor: Data Science\nMinor: Computer Science and Economics\nSeptember 2022 - Present"
+    "text": "Macalester College | St. Paul, MN\nMajor: Statistics\nMinor: Computer Science and Economics\nSeptember 2022 - Present"
   },
   {
     "objectID": "about.html#education",
     "href": "about.html#education",
     "title": "Resume",
     "section": "",
-    "text": "Macalester College | St. Paul, MN\nMajor: Data Science\nMinor: Computer Science and Economics\nSeptember 2022 - Present"
+    "text": "Macalester College | St. Paul, MN\nMajor: Statistics\nMinor: Computer Science and Economics\nSeptember 2022 - Present"
   },
   {
     "objectID": "about.html#experience",
     "href": "about.html#experience",
     "title": "Resume",
     "section": "Experience",
-    "text": "Experience\n\nUnitedHealth Group | Eden Prairie, MN\nData Analyst Intern\nMay 2024 - August 2024\nMacalester College | St. Paul, MN\nTeaching Assistant for COMP/STAT 112, STAT 155, ECON 119\nSeptember 2023 - Present"
+    "text": "Experience\n\nDelaget | Minneapolis, MN\nSoftware Engineering Intern\nMarch 2025 - Present\nNorth Star Financial | Minneapolis, MN\nData Science Intern\nDecember 2024 - April 2025\nUnitedHealth Group | Eden Prairie, MN\nData Analyst Intern\nMay 2024 - August 2024\nMacalester College | St. Paul, MN\nTeaching Assistant for COMP/STAT 112, STAT 155, ECON 119\nSeptember 2023 - Present"
   },
   {
     "objectID": "about.html#extracurriculars",
     "href": "about.html#extracurriculars",
     "title": "Resume",
     "section": "Extracurricular(s)",
-    "text": "Extracurricular(s)\n\nMacalester Men’s Soccer\n\nMIAC All-Conference Honors(Fall 2022, Fall 2023, Fall 2024)\nUnited Soccer Coaches All-Region Honors(Fall 2023)\nCSC Academic All-District Honors(Fall 2023)\nMIAC Academic All-Conference(Fall 2023)\nRising Scot Scholar Athlete of the Year(2023-2024)\n\nMacalester College MSCS Student Advisory Board\n\nMembers of this board serve as a bridge of communication between students and staff in the Math, Statistics, and Computer Science departments.\nAdvisory Board members also introduce and facilitate their own inclusivity and accessibility initiatives.\n\nMacalester College Data Science Club\n\nFounder of the data science club where students and faculty come together weekly to practice and share data science skills.\nAt our meetings we will work on items ranging from mini projects, skill exercises, personal portfolios, etc."
+    "text": "Extracurricular(s)\n\nMacalester Men’s Soccer\n\nMIAC All-Conference Honors(Fall 2022, Fall 2023, Fall 2024)\nUnited Soccer Coaches All-Region Honors(Fall 2023)\nCSC Academic All-District Honors(Fall 2023)\nMIAC Academic All-Conference(Fall 2023)\nRising Scot Scholar Athlete of the Year(2023-2024)"
   },
   {
     "objectID": "about.html#skills",
     "href": "about.html#skills",
     "title": "Resume",
     "section": "Skills",
-    "text": "Skills\n\nComputer skills :  R/RStudio, Java, Javascript, HTML, CSS, SQL, Python, React, Excel"
+    "text": "Skills\n\nComputer skills : R/RStudio, Java, Javascript, HTML, CSS, SQL, Python, React, Excel"
   },
   {
     "objectID": "projects/SP1/SP_1_Trade:Disasters.html",
@@ -340,6 +340,6 @@
     "href": "index.html",
     "title": "Welcome!",
     "section": "",
-    "text": "Welcome to my personal website, created using Quarto in R/RStudio. My name is Nick Kent. I am a junior at Macalester College pursuing a major in data science, and minors in computer science and economics. I have been gaining many skills in the realms of data science, computer science, economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset. Please take a look through this website if you would like to learn more about myself and some of my work.\n\n\n\n\n\n\n\n\n\nI spend lots of time playing soccer. During the fall(and the majority of the school year) I compete as a member of the men’s soccer team at Macalester College, and over the summer I spend time playing with Minneapolis City Soccer Club.\n \nI also enjoy spending time with friends and family outdoors, and trying new restaurants. My favorite places to hangout in Minneapolis are the lakes in Minneapolis(Harriet, Bde Maka Ska, Cedar, Isles). Furthermore, I enjoy restaurants such as Black Sheep Pizza, World Street Kitchen, Quangs, and Andale Taqueria."
+    "text": "Welcome to my personal website, created using Quarto in R/RStudio. My name is Nick Kent. I am a junior at Macalester College pursuing a major in statistics, and minors in computer science and economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset. Please take a look through this website if you would like to learn more about myself and some of my work.\n\n\n\n\n\n\n\n\n\nI spend lots of time playing soccer. During the fall(and the majority of the school year) I compete as a member of the men’s soccer team at Macalester College, and over the summer I spend time playing with Minneapolis City Soccer Club.\n \nI also enjoy spending time with friends and family outdoors, and trying new restaurants. My favorite places to hangout in Minneapolis are the lakes in Minneapolis(Harriet, Bde Maka Ska, Cedar, Isles). Furthermore, I enjoy restaurants such as Black Sheep Pizza, World Street Kitchen, Quangs, and Andale Taqueria."
   }
 ]

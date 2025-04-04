@@ -11,6 +11,9 @@ website:
       - about.qmd
       - data_viz.qmd
       - projects/Projects.qmd
+    tools:
+      - icon: linkedin
+        href: www.linkedin.com/in/nicholas-kent-300ab2277
 
 format:
   html:
