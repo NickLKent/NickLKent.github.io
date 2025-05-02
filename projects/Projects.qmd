@@ -5,6 +5,14 @@ format:
     css: "styles.css"
 ---
 
+### Implementing Bayesian Statistical Techniques in Genome Wide Association Studies {style="color: #158CBA"}
+
+:::{.project-layout}
+STAT 494 - Final Project + Capstone
+
+[<button>Explore this Bayesian tools for GWAS</button>](SP6/Final_Digital Artifact copy.html)
+:::
+
 ### Modeling Trade Shares of GDP vs Natural Disasters {style="color: #158CBA"}
 
 :::{.project-layout}

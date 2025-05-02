@@ -1,0 +1,232 @@
+---
+title: "Implementing Bayesian Statistical Techniques in Genome Wide Association Studies"
+author: "Nick Kent and Bowman Wingard"
+format: html
+editor: visual
+---
+
+# Loading packages
+
+```{r message=FALSE}
+library(bayesrules)
+library(tidyverse)
+library(rstan)
+library(rstanarm)
+library(bayesplot)
+library(tidybayes)
+library(janitor)
+library(broom.mixed)
+```
+
+# Motivation
+
+<br> The motivation for this project started with an article written by Matthew Stephens and David J. Balding. Their framework used Bayesian techniques to carry out a genome wide association study. Their results consisted of the probability that each SNP in the genome was associated with the SNP of interest. In other words the posterior probability of association which is similar to a p-value in a frequentist framework but has a nicer interpretation. To achieve this they split their approach into three steps: setting a prior, calculating a Bayes factor, and calculating the posterior odds. We decided to veer away from this approach as Bayes factors were not something we were interested in dealing with. Therefore, we went back to the early stages of this class and thought about how a genome wide association study is done, and figured we could find a Bayesian approach to this. This forced us to understand how Bayesian regression works and for that we reffered to a textbook written by Alicia A. Johnson, Miles Q. Ott, and Mine Dogucu. <br>
+
+# Background
+
+**Goal of our project:** The goal of this project is to figure out how to implement Bayesian Statistical methods in a genome wide association study. <br> <br> The main idea of Bayesian statistics is that we form our understanding of uncertainty or probability by using a combination of our prior beliefs/knowledge along with the things we observe. Frequentist statistics interpret probabilities as the frequency at which an event occurs, whereas bayesians interpret probabilities as the relative plausibility of an event occurring. Furthermore, when most people, frequentists included, try to estimate a parameter they do so by calculating a point estimate from a sample. Bayesians on the other hand treat these unknown parameters(or things they are trying to estimate) as random variables and therefore the parameter follows a probability distribution. So, with this being said when we carry out an analysis or experiment with these two frameworks we get slightly different results. As we mentioned, when a frequentist analysis is run we get a point estimate, and from there we can calculate a p-value and construct a confidence interval to decide whether or not our results are statistically significant. In a Bayesian framework, our result is simply a probability distribution for our parameter of interest and from there we can calculate the probability that our parameter takes on certain values, lies between two values, or is above/below a certain value. <br> <br> Now in order to obtain our probability distribution for our parameter of interest we need to specify a few things. First we need to provide a prior distribution for our parameter. This distribution is representative of our initial beliefs of the parameter. This could come from a past study, but in general it should capture/consider the possible/likely values of the parameter, as well as the shape and strength of the parameters distribution. Then from there, we must specify a likelihood function. The likelihood function should follow the distribution that we believe our data follows. What the likelihood function represents literally is the probability of observing the data we did given different values of the parameter. In other words, it tells us the parameter value that is most plausible given our observed data. Then we must derive the normalizing constant which ensures that our posterior distribution is a valid probability distribution. The normalizing constant usually isn't a super important aspect of Bayesian statistics as you can usually derive the posterior distribution without it by saying that the posterior is proportional to the product of the likelihood function and the prior. The normalizing constant is the integral with respect to the unknown parameter of the product of the likelihood function and the prior distribution. Now, once we combine our likelihood function along with our prior distribution we will be able to derive what's known as a posterior distribution. This distribution is an updated distribution for our parameter. <br> <br> The Bayesian framework follows the following set up: <br> $$P(A|B) = \frac{P(B|A)P(A)}{P(B)}$$ $$P(A|B) \text{ is our posterior for A.}$$ $$P(B|A) \text{ is our likelihood function.}$$ $$P(A) \text{ is our prior for A.}$$ $$P(B) \text{ is the normalizing constant.}$$ <br> <br> Before we get into the bulk of the project we want to touch on a few benefits of a Bayesian approach. First off, a Bayesian approach is very nice because of the fact that it incorporates prior knowledge as well as the data you observe to create conclusions about the parameter of interest. In addition, you can update your results as more data is collected. Many people appreciate this as it is very similar to a human way of thinking. For example, if somebody said they could make a 3-point shot in basketball EVERY time, your prior beliefs would be "no way! no one can do that!". But then if you saw them make 10 in a row (FYI, this would be your likelihood function or observed data), your updated beliefs (posterior distribution) would maybe be "OK, maybe they can make it every time but I'm still skeptical". But then if they make 1,000 in a row (new likelihood function or observed data), your new updated beliefs would be "OK I believe them, they can make it every time". Another huge advantage to a Bayesian approach comes from the interpretability, specifically of the posterior distribution. Because the result of the analysis is an entire probability distribution for our parameter it allows us to make direct probability statements such as, there's a 90% chance that parameter "Y" falls between A and B. <br> <br>
+
+# Simple Example
+
+Supposed we are interested in finding out the proportion of people who have two minor alleles at a specific SNP ($\theta$), either you have two minor alleles or you do not. From a previous study we are fairly confident that 20% of people have 2 minor alleles at the SNP of interest. Therefore the prior distribution of $\theta$ will be modeled as the following:
+
+$$\theta \sim Beta(2,8)$$ The mean or expected value of this distribution is 0.20. <br> Now, we have collected a sample of 50 people and find out that 20 people have 2 minor alleles at the specific SNP and 30 people do not have two minor alleles. When we are collecting a sample like this each observation is a "coin flip", yes (two minor alleles) or no (not two minor alleles), and therefore our likelihood function can be modeled with a binomial distribution like this:
+
+$$Y | \theta \sim Binomial(50,\theta)$$ and for the collected data, the equation looks like so:
+
+$$ L(\theta) = \Pr(Y = 20 \mid p) = \binom{50}{20} \theta^{20} (1-\theta)^{30} $$ <br> Lastly, when we combine our prior distribution with our likelihood function we get a beta posterior distribution for $\theta$. This distribution is a combination of our prior successes and observed successes as well as prior fails and observed fails. Refer to the following to see the posterior distribution:
+
+$$\theta | Y \sim Beta(\text{original alpha + observed successes}, \text{ original beta + observed failures})$$
+
+$$\theta | Y \sim Beta(2+20,30+8)$$ $$\theta | Y \sim Beta(22,38)$$ <br> Now, take a look at the prior and likelihood distribution visually before we dive into looking at the posterior
+
+## Prior Distribution
+
+```{r}
+# Prior beliefs of theta
+
+curve(dbeta(x, shape1 = 2, shape2 = 8), 
+      from = 0, to = 1, 
+      col = "darkblue", 
+      lwd = 2, 
+      ylab = "Density", 
+      xlab = expression( ~ theta),
+      main = expression("Prior beliefs of " ~ theta)) # mean --> about 20% of people will have two minor alleles
+
+```
+
+## Likelihood Distribution
+
+```{r}
+# Set parameters
+successes <- 20
+trials <- 50
+
+# Generate a sequence of theta values
+theta_values <- seq(0.01, 0.99, by = 0.001)
+
+likelihood_function <- function(theta, successes, trials) {
+  return (theta^successes * (1 - theta)^(trials - successes))
+}
+
+# Calculate the likelihood for each theta
+likelihood_values <- sapply(theta_values, likelihood_function, successes = successes, trials = trials)
+
+# Plot the likelihood function
+plot(theta_values, likelihood_values, type = "l", col = "blue", 
+     xlab = expression(theta), ylab = "Likelihood", 
+     main = "Likelihood Function")
+```
+
+## Posterior Distribution
+
+```{r}
+# Posterior distribution of theta
+
+curve(dbeta(x, shape1 = 22, shape2 = 38), 
+      from = 0, to = 1, 
+      col = "darkblue", 
+      lwd = 2, 
+      ylab = "Density", 
+      xlab = expression( ~ theta),
+      main = expression("Posterior beliefs of " ~ theta)) 
+
+1 - pbeta(0.2, shape1 = 22, shape2 = 38)
+pbeta(0.555, shape1 = 22, shape2 = 38) - pbeta(0.25, shape1 = 22, shape2 = 38)
+
+```
+
+So, we know that we had a prior distribution for $\theta$ that had a mean of 0.20. Then we observed 20/50 successes and 30/50 failures, meaning the observed proportion of people with two minor alleles was 0.40. Then we combined these two pieces to obtain a beta distribution with parameters (22, 38). The expected value of this distribution, or in other words our updated beliefs about the proportion of people who have two minor alleles is 0.3667. Furthermore there is 99% chance that $\theta$ is greater than 0.2 and a 97% chance that the value of $\theta$ is between 0.25 and 0.55. So we think we can be fairly confident that the value of $\theta$ is above the prior value.
+
+# Our project
+
+## GWAS/Regression using a Bayesian framework
+
+To restate the goal of this project, we want to implement a Bayesian framework into a genome wide association study. <br> <br> Let's first discuss how a genome wide association study works using a frequentist approach. Simply put the idea of a genome wide association studies is to try and find genetic variants (single nucleotide polymorphisms or SNPs) that are associated with a specific trait. We often have thousands or even hundreds of thousands of SNPs that we want to check to see if they are associated with the trait of interest. To do this we run a marginal regression models which means we create a regression model for each SNP as the predictor and the trait of interest as the outcome variable and collect a point estimate and p-value from the model. Once we have collected a point estimate and p-value for each SNP, we order them from lowest to highest(most significant to least significant) p-value to see if there are any SNPs that have a statistically significant effect on the outcome variable. Usually we look for p-values below $5 \times 10^{-8}$. You interpret these p-values as the probability of observing this point estimate if the null hypothesis (no relationship between SNP and trait) is true. This isn't a very intuitive result and one of the main reasons we shift to explore a Bayesian approach. <br> <br> So to take a Bayesian approach and implement it into a genome wide association study, we need to learn how Bayesian regression works, and then we just implement it for each SNP. A simple linear regression model has the following form:
+
+$$Y = \beta_0 + \beta_1 X$$
+
+Meaning we have three unknown parameters that we are trying to estimate. $\beta_0$, our intercept. $\beta_1$, our slope. $\sigma^2$, the variance of our y values. This means we first have to set a prior for each one of those parameters. $$\beta_0 \sim \; ???$$ This represents our prior beliefs of our intercept coefficient, meaning what is the expected value or values of our outcome variable if the predictor variable equals zero. <br> <br> $$\beta_1 \sim \; ???$$ This represents our prior beliefs of our slope coefficient, meaning what do we expect the effect size of the predictor variable to be or how much will the outcome variable change on average if the predictor increases by one. <br> <br> $$\sigma^2 \sim \; ???$$ Lastly, the prior distribution of the variance of our outcome variable. <br> <br> Then we need to create a likelihood function, which represents what values of $\beta_0$, $\beta_1$, and $\sigma^2$ are most plausible given our observed data. This function tends to have the following form, and will usually be distributed normally. $$ Y \; | \; \beta_0, \beta_1, \sigma^2 \sim  \; N(\beta_0 + \beta_1X, \sigma^2)$$ <br> <br> Then we put all of these together to derive a posterior distribution for our parameters of interest. $$ \pi(\beta_0, \beta_1, \sigma^2 \; | \; Y)\propto f(Y \; | \; \beta_0, \beta_1, \sigma^2) \pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)$$ This distribution contains our updated beliefs about our parameters of interest. One very important thing to note is that this posterior probability distribution is very difficult (and maybe impossible) to derive analytically or by hand. The reason being because the normalizing constant is found by integrating the product of the likelihood and prior over all possible values of the parameters. So the normalizing constant of the above posterior distribution follows the following form shown in the denominator of the fraction. <br> $$\pi(\beta_0, \beta_1, \sigma^2 \; | \; Y) =  \frac{f(Y \; | \; \beta_0, \beta_1, \sigma^2) \pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)} {\int\int\int  f(Y \; | \; \beta_0, \beta_1, \sigma^2)\;\pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)  d\beta_0\beta_1d\sigma^2}$$ <br> Instead of solving this, we are instead going to simulate our posterior distribution and then get separate distributions for each parameters. This will be done using Markov Chain Monte Carlo (MCMC). We are not experts on this tool nor is it the focus of our project but we want to discuss it briefly. MCMC combines two ideas: Markov chains and Monte Carlo. Monte Carlo which is a statistical tool for repeated sampling. Markov chains is a process of describing a sequence of possible events in which the probability of the next event only depends on the state of the current event. So when we combine these two tools we get a way to estimate very complex probability distributions, like the posterior of a Bayesian regression. <br>
+
+## Creating the data
+
+<br> We are creating our own data for the purpose of this example. In this case we are looking at 100 peoples heights, and then 4 SNPs in each of their genomes. At each SNP everyone has a 64% chance of 0 minor alleles, a 32% chance of 1 minor allele, and a 4% chance of 2 minor alleles. Then each persons height is randomly selected from a normal distribution. It is also important to note that everyones height also depends on the number of minor alleles that they have at SNP4 and SNP2.
+
+```{r}
+set.seed(494)
+
+# Generating data
+n <- 100
+
+# generate data
+SNP1 <- sample(0:2, size = n, replace = T, prob = c(.64, .32, .04))
+SNP2 <- sample(0:2, size = n, replace = T, prob = c(.64, .32, .04))
+SNP3 <- sample(0:2, size = n, replace = T, prob = c(.64, .32, .04))
+SNP4 <- sample(0:2, size = n, replace = T, prob = c(.64, .32, .04))
+height <- rnorm(n, mean = 70, sd = 5) + 5*SNP4 + 0*SNP3 + 2*SNP2 + 0*SNP1 
+
+data <- as.data.frame(cbind(height, SNP1, SNP2, SNP3, SNP4))
+
+data %>% 
+  ggplot(aes(x=height))+
+  geom_density()
+
+data %>% head(3)
+```
+
+## Our model
+
+So now we take the Bayesian regression framework and implement into a genome wide association study. We start with the following regression model, and remember because we are doing a GWAS and using a marginal regression this type of model will be fit with each SNP in our data set. In this case our intercept is noted as $\theta$, our slope coefficient is $SNP_{Effect}$, and the variance of the heights (which is seen in the likelihood function in the next section) is noted as $\epsilon$.
+
+$$Height = \theta + SNP_{Effect}\;x$$
+
+## Likelihood function
+
+Then we must set a likelihood function. In this case we will have a normally distributed likelihood function because we know that heights are a normally distributed random variable with a mean and some variance. What does this likelihood function means in words? It represents what values of $\theta$, $SNP_{Effect}$, and $\epsilon$ make our observed data, Height(Y/outcome) and SNPs(X/predictor), most plausible. $$ Height \; | \; \theta, \; SNP_{Effect}, \; \epsilon \sim \; N(\theta + SNP_{Effect}x, \; \epsilon)$$
+
+## Prior distributions
+
+First, the prior for $\theta$. We set the prior distribution of $\theta$ as a normal distribution with a mean of 70 and a variance of 5. What this means is that we expect peoples heights to be centered around 70 inches if they have zero minor alleles or if a SNP has no effect, but this could also vary slightly. Then, the prior for $SNP_{Effect}$. This represents our prior beliefs about what we think the increase in height will be if the number of minor alleles increases by one or what we think the effect of a SNP will be on the outcome variable height. It is centered at zero because we tend to think that the majority (\~99% or more) of SNPs do not have an effect on height, but once again this could also vary a little bit. Finally, the prior for $\epsilon$. This is representative of our beliefs about the variance of our heights and could represent other factors that influence height beyond genetic information. $$\theta \sim \; N(70,5) , \; SNP_{Effect} \sim \; N(0,1)  , \; \epsilon  \sim \; Gamma(1,0.2)$$
+
+All of these priors are shown below. <br>
+
+```{r}
+plot_normal(mean = 70, sd = 5) + 
+  labs(x = "Theta", y = "pdf")
+plot_normal(mean = 0, sd = 1) + 
+  labs(x = "SNP Effect", y = "pdf")
+plot_gamma(shape = 1, rate = 0.2) + 
+  labs(x = "Epsilon", y = "pdf")
+```
+
+## Posterior distribution
+
+Now, our posterior distribution which we mentioned will actually get simulated, but it will have the form shown below.
+
+$$ \pi(\theta, \; SNP_{Effect}, \; \epsilon  \; | \; Height) \; \propto \; f(Height \; | \; \theta, \; SNP_{Effect}, \; \epsilon) \; \pi(\theta) \; \pi(SNP_{Effect}) \; \pi(\epsilon)$$ <br> This means that our results are a joint probability function of $\theta$, $SNP_{Effect}$, $\epsilon$ given our observed data.
+
+## Simulating the posterior distributions
+
+We mentioned earlier that we must simulate our posterior distribution. Here is the code for how we will do it, and then we will talk about the results below. Remember, we simulated all of this data so we know the truth about each SNP and it's effect on height. What we want to find out is if this is an effective way to analyze the relationship between SNPs and height. <br>
+
+Here we are creating a function to run a MCMC simulation for height as a function a one SNP. As you can see it requires you to specify the distribution for all of your priors, which we have done.
+
+```{r}
+# Function to run a MCMC simulation for each variable
+pred_posterior <- function(SNP, height, data) {
+  gene_mod <- stan_glm(height ~ SNP, data = data,
+                       family = gaussian,
+                       prior_intercept = normal(70, 5),
+                       prior = normal(0, 1), 
+                       prior_aux = exponential(0.2),
+                       chains = 4, iter = 5000*2, seed = 84735, 
+                       refresh = 0,        
+                       show_messages = FALSE)
+  print(posterior_interval(gene_mod, prob = 0.95))
+  mcmc_dens_overlay(gene_mod)
+}
+```
+
+<br> Starting first with **SNP1**. As a reminder, when we simulated the data SNP1 does not have an effect on height.
+
+```{r}
+pred_posterior(data$SNP1, data$height, data)
+```
+
+<br> If we take a look at the results we see it matches our expectation almost perfectly. The posterior distribution for $SNP_{Effect}$ (located in the middle of the three graphs) is centered right at zero which means that the expected value of the increase in height if the number of minor alleles at SNP1 increases by one unit is zero. Then if we look over to the posterior distribution of the intercept($\theta$) we see that it has changed a bit from our prior distribution. Recall that our prior distribution for $\theta$ had an expected value of 70, and now we see that $\theta$ has an expected value of about 74, meaning if someone has zero minor alleles at SNP 1 we would expect them to have a height of about 74 inches. This means that the data that we observed suggests that the expected value for the intercept is higher than we originally thought. This same conclusion is relevant for the next three SNPs. Lastly, the posterior distribution for the variance/sigma(or $\epsilon$ in our case) is now a little bit higher than the prior belief for $\epsilon$ suggesting that the heights we observe have more variance than we originally thought. This same conclusion is relevant for the next three SNPs. <br> <br> Now looking at **SNP2**. As a reminder, when we simulated the data SNP2 had a small effect on height.
+
+```{r}
+pred_posterior(data$SNP2, data$height, data)
+```
+
+<br> Starting first with the posterior for $SNP_{Effect}$. We see now that the expected value or center of the distribution is right at about 1. This means that for each additional minor allele at SNP2 we would expect that someones height goes up by an average of 1 inch. Remember that when we simulated the data, the actual value for this slope coefficient was 2. What we mean by that is that for each minor allele someone had at SNP2, 2 inches was added on to their total height. The reason the posterior distribution is centered at 1 instead of 2 is because the Bayesian framework is also taking into account our prior beliefs about this slope parameter, which was centered at 0. <br> <br> Now looking at **SNP3**. As a reminder, when we simulated the data SNP3 does not have an effect on height.
+
+```{r}
+pred_posterior(data$SNP3, data$height, data)
+```
+
+<br> The results we see from SNP 3 are almost identical to the ones we observed from SNP1 because in both cases when we created the data peoples height were not dependent on the number of SNPs someone has at these SNPs. <br> <br> Now looking at **SNP4**. As a reminder, when we simulated the data SNP4 had a large effect on height.
+
+```{r}
+pred_posterior(data$SNP4, data$height, data)
+```
+
+<br> Last but not least, SNP4. The posterior distribution for $SNP_{Effect}$ in this case is most different from the prior distribution. This is what we expect to see given what we know about the data. The expected value of this posterior distribution is about 2.5. This is fairly conservative given the truth that for each additional minor allele at SNP4 someones height will actually increase by 5 inches.
+
+# Conclusion
+
+## Drawbacks
+
+There are three main drawbacks from this approach that we have used: computational cost, intellectual cost, and subjectivity. <br> The computational cost of this approach comes solely from the need to simulate our posterior distributions for $\theta$, $SNP_{Effect}$, and $\epsilon$. In this approach we used the RStan package which is used for defining and analyzing Bayesian models in R. In our case we are using the RStan package for Bayesian inference and more specifically we are using Markov Chain Monte Carlo to estimate our posterior models. This is very computationally expensive because of the amount of iteration that is used. In our very simple understanding of MCMC, each step in the chain involves taking a new sample and evaluating our likelihood function and the three prior distributions. As the data grows the amount of computing power needed to perform this grows as well. In our case we only used 4 SNPs and 100 people, but most genome wide association studies contain thousands of people and more importantly about a million SNPs. So if these methods were used in practice it would be extremely computationally expensive. <br> Now to quickly touch on the intellectual cost of using this approach. Recall that the results for each regression model (height \~ SNP) that was fit was three distributions, one for each parameter in the model. In a normal GWAS about 1 million SNPs are used. Imagine we had to look at these results for one million SNPs and had to find the ones with the largest change from the prior distributions, we would be looking for a while. One way we could avoid having to do that is finding a way to pull out the mean or expected value from each of the three distributions each time we fit a model (height \~ SNP) and saving them to a data frame. That way we could easily arrange the models/SNP from highest expected effect on height to lowest expected effect on height. <br> Now, as with any Bayesian approach there is a subjectivity aspect to this analysis. Conclusions from a Bayesian analysis are drawn based on a likelihood function and a prior distribution. The issue arises from our prior distribution which contributes our prior beliefs to the posterior distribution and depends only on the researchers prior beliefs about the association in question, meaning it is influenced by someones interpretations, opinions, or experiences. One way we can reduce the subjectivity of our outcomes is by using non-informative (or weakly informative) priors. These are prior distributions that do not impact the posterior distribution a lot and let the observed data speak for itself. <br>
+
+## Next steps
+
+There are a couple things we would like to complete in the future: sensitivity analysis and different ways to interpret results. <br> Starting first with some sensitivity analysis. What we mean by this is: what happens to our posterior distributions if we changed our prior distributions? For example, if our prior for our slope parameter was $SNP_{Effect} \sim N(0,5)$ instead of $SNP_{Effect} \sim N(0,1)$, how different would our results be? Would they reflect the truth more closely? <br> Then we would like to find ways to draw out different conclusions from the RStan/MCMC output. Meaning we can find ways to get credible intervals for each parameter for each marginal regression model. Those would be very helpful because they can be interpreted very easily: there is a $\_\_\%$ chance that $SNP_{Effect}$ (Slope) lies between a and b. We can also calculate probabilities that each parameter is above/below a certain value: there is a $\_\_\%$ chance that $SNP_{Effect}$ is greater than c. These types of conclusions can help us draw more concrete conclusions about the plausibility that each parameter has a certain value. <br>
+
+## End
+
+In this project we looked into how Bayesian statistical methods can be implemented into genome wide association studies(GWAS). As we know, GWAS is the process of creating a simple linear regression model for each SNP along the genome (predictor variable) with our trait of interest (outcome variable). We began by introducing the structure of Bayesian statistics, then explained how that structure can be used in a regression setting. Once we understood the methods that were going to be used, we created some data and put them to the test. <br>
+
+# References
+
+Johnson, Alicia. Bayes Rules! An Introduction to Applied Bayesian Modeling. <br> <br> Stephens, Matthew, and David J. Balding. “Bayesian statistical methods for Genetic Association Studies.” Nature Reviews Genetics, vol. 10, no. 10, Oct. 2009, pp. 681–690, https://doi.org/10.1038/nrg2615 <br> <br> Stan Development Team (2025). RStan: the R interface to Stan. R package version 2.32.7. https://mc-stan.org/. <br> <br> Okonek, Taylor. Math/Stat 355: Statistical Theory, 7 Dec. 2023, mac-stat.github.io/MathStat355Notes/
