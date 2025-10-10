@@ -20,7 +20,6 @@ September 2022 - Present
 ## Experience {style="color: #158CBA"}
 
 ::: {#Experience .Experience}
-
 **Delaget** \| Minneapolis, MN
 
 Software Engineering Intern
@@ -60,7 +59,6 @@ September 2023 - Present
 -   MIAC Academic All-Conference(Fall 2023)
 
 -   Rising Scot Scholar Athlete of the Year(2023-2024)
-
 :::
 
 ## Skills {style="color: #158CBA"}
