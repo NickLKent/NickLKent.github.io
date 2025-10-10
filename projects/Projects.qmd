@@ -61,7 +61,7 @@ Are there better/healthier caloric fast food restaurants?
 :::{.project-layout}
 STAT 494 - Content Summary #1
 
-[<button>Explore a GWAS Simulation + Summary</button>](SP5/ContentSummary_NoAssoc.html)
+[<button>Explore a GWAS Simulation + Summary</button>](SP5/ContentSummary_1.html)
 
-[<button>Explore a GWAS Simulation + Summary(Outcome depends on SNP)</button>](SP5/ContentSummary_YesAssoc.html)
+[<button>Explore a GWAS Simulation + Summary(Outcome depends on SNP)</button>](SP5/ContentSummary_2.html)
 :::
