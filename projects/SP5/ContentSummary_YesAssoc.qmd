@@ -6,7 +6,9 @@ editor: visual
 ---
 
 # Experiment
-This is the exact same experiment as the first one, except now the IQ score depends on one of the SNP's. 
+
+This is the exact same experiment as the first one, except now the IQ score depends on one of the SNP's.
+
 ```{r}
 library(tidyverse)
 library(dplyr)
