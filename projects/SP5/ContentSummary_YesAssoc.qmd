@@ -1,0 +1,200 @@
+---
+title: "Content Summary #1"
+author: "Nick Kent"
+format: html
+editor: visual
+---
+
+# Experiment
+This is the exact same experiment as the first one, except now the IQ score depends on one of the SNP's. 
+```{r}
+library(tidyverse)
+library(dplyr)
+library(broom)
+library(qqman)
+```
+
+## Step 1: Number of observations
+
+100 observations 200,000 SNP's
+
+## Step 2: Construct genotype for n observations
+
+In each position(SNP) an observation either gets a AG, GA, AA, GG, each A/G represents what they got from each parent in that position.
+
+#### Creating the number of SNP's for each person, along with the probability for an A or G in each allele.
+
+```{r}
+set.seed(42)
+
+# Number of people, SNPs per chromosome, and chromosomes
+num_people <- 100
+num_snps_per_chr <- 10000
+num_chromosomes <- 23
+
+snp_grid <- expand_grid(
+  Chromosome = 1:num_chromosomes,
+  Position = 1:num_snps_per_chr
+) %>%
+  mutate(
+    SNP_ID = row_number(),
+    prob_A = runif(n(), 0, 1)
+  ) %>%
+  mutate(prob_G = 1 - prob_A) 
+
+head(snp_grid)
+```
+
+#### Creating the values of each SNP for each person. In other words, assigning every with two alleles at each SNP.
+
+```{r creating-genotypes}
+# Create person data with SNPs and varying probabilities
+people_data <- tibble(Person_ID = 1:num_people) %>%
+  crossing(snp_grid) %>%
+  mutate(
+    Allele_1 = ifelse(runif(n()) < prob_A, "A", "G"),
+    Allele_2 = ifelse(runif(n()) < prob_A, "A", "G")
+  )
+
+head(people_data)
+```
+
+#### Using the generated data, we are calculating the minor allele at each SNP across the population.
+
+```{r identifying-MA}
+# Identify the minor allele for each SNP
+minor_alleles <- people_data %>%
+  group_by(SNP_ID) %>%
+  mutate(
+    count_A = sum(Allele_1 == "A" | Allele_2 == "A"), 
+    count_G = sum(Allele_1 == "G" | Allele_2 == "G")
+  ) %>%
+  mutate(
+    Minor_Allele = if_else(count_A < count_G, "A", "G"), 
+    MAF = pmin(count_A, count_G) / (2 * num_people)
+  ) %>%
+  select(SNP_ID, Minor_Allele, MAF) %>%
+  distinct()
+
+# NOTE: This is part of quality control
+minor_alleles <- minor_alleles %>% 
+  filter(MAF != 0)
+
+head(minor_alleles)
+```
+
+#### Counting the number of minor alleles that each person has at each SNP.
+
+```{r counting-MA}
+# Counting the minor alleles at each SNP position
+minor_allele_counts <- people_data %>%
+  left_join(minor_alleles, by = "SNP_ID") %>%
+  mutate(
+    Minor_Allele_Count = 
+      (Minor_Allele == Allele_1) + (Minor_Allele == Allele_2)  # Vectorized count
+  ) %>%
+  select(Person_ID, SNP_ID, Minor_Allele_Count) %>%  # Keep only necessary columns
+  pivot_wider(names_from = SNP_ID, values_from = Minor_Allele_Count)
+
+head(minor_allele_counts)
+```
+
+## Step 3: Quality control
+
+```{r doing-QC}
+filtered_snps <- minor_alleles$SNP_ID  # SNPs with nonzero MAF
+
+# Remove columns that are no longer in minor_allele_counts due to filtering
+valid_columns <- intersect(names(minor_allele_counts), as.character(filtered_snps))
+
+# Select only the valid columns (Person_ID + SNP columns) and remove columns that are all NA
+minor_allele_counts <- minor_allele_counts %>%
+  select(Person_ID, all_of(valid_columns)) %>%
+  select(where(~ !all(is.na(.))))
+
+head(minor_allele_counts)
+```
+
+## Step 4: Multiple testing consideration
+
+Bonferroni solution: One very widely used approach for adjusting for multiple testing is known as the Bonferroni Correction. We calculate our new significance threshold by dividing our desired family-wise error rate by the number of hypothesis tests that we conducted.
+
+Significance threshold = 0.05 / 227642 = 2.196431e-07
+
+## Step 5: Create quantitative outcome variable
+
+#### Now the outcome variable, IQ, depends on one of the SNP's
+
+```{r creating quantitative variables}
+minor_allele_counts <- minor_allele_counts %>% 
+  mutate(IQ = `160000`*15 + rnorm(n(), mean = 100, sd = 15))
+```
+
+## Step 6: Run marginal regression
+
+```{r fitting-models}
+IQ <- minor_allele_counts$IQ
+X <- as.matrix(minor_allele_counts %>% select(-IQ, -Person_ID))  # Convert predictors to a matrix
+
+# Initialize vectors to store results
+num_snps <- ncol(X)
+all_betas <- numeric(num_snps)
+all_ses <- numeric(num_snps)
+all_tstats <- numeric(num_snps)
+all_pvals <- numeric(num_snps)
+
+# Run marginal regressions efficiently
+for (i in 1:num_snps) {
+  model <- lm(IQ ~ X[, i])  # Fit a simple regression model for each predictor
+  
+  coefinfo <- tidy(model)  # Extract coefficients
+  
+  all_betas[i] <- coefinfo$estimate[2]
+  all_ses[i] <- coefinfo$std.error[2]
+  all_tstats[i] <- coefinfo$statistic[2]
+  all_pvals[i] <- coefinfo$p.value[2]
+  
+  if (i %% 10000 == 0) print(paste("Analyzing predictor", i))  # Progress update
+}
+
+# Create results data frame
+results <- tibble(
+  SNP_ID = as.integer(colnames(X)),
+  Beta = all_betas,
+  SE = all_ses,
+  T_Stat = all_tstats,
+  P_Value = all_pvals
+)
+
+# View top predictors by significance
+results %>% arrange(P_Value) %>% head(10)
+```
+
+```{r}
+# Double checking that it is correct
+tidy(lm(IQ ~ `1726`, data = minor_allele_counts))
+```
+
+## Step 7: One final dataset
+
+```{r final-dataset}
+final_results <- minor_alleles %>% 
+  left_join(results, by="SNP_ID") %>% 
+  left_join(snp_grid, by="SNP_ID") %>% 
+  select(SNP_ID, Minor_Allele, MAF, Chromosome, Position, P_Value)
+```
+
+## Step 8: Create visualizations
+
+```{r manhattan-plot, warning=FALSE}
+final_results %>% 
+  mutate(Chromosome = as.factor(`Chromosome`)) %>% 
+  ggplot(aes(x = SNP_ID, y = -log10(P_Value), color = Chromosome))+
+  geom_point()+
+  geom_hline(yintercept = -log10(2.196431e-07), linetype = "dashed", color = "Pink")
+```
+
+```{r qq-plot}
+qq(final_results$P_Value, main = "Q-Q plot of GWAS p-values", xlim = c(0, 7), ylim = c(0,
+    12), pch = 18, col = "blue4", cex = 1, las = 1)
+```
