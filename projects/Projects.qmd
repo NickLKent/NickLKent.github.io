@@ -17,20 +17,21 @@ What happens to stock prices in response to equity research recommendations?
 [<button>Explore Econometric Analysis</button>](SP9/Kent - ECON 381 - Final Term Paper.pdf)
 :::
 
+### Implementing Bayesian Statistical Techniques in Genome Wide Association Studies {style="color: #158CBA"}
+
+:::{.project-layout}
+Statistical Genetics Project
+
+[<button>Explore Bayesian tools for GWAS</button>](SP6/Final_Digital Artifact.html)
+[<button>Explore Formal Presentation</button>](SP6/Capstone Final Presentation.pdf)
+:::
+
 ### Forecasting Electricity Usage at Macalester College {style="color: #158CBA"}
 
 :::{.project-layout}
 How has the electricity usage at Macalester College changed over the years
 
 [<button>Explore Time Series Analysis</button>](SP7/mini-project.html)
-:::
-
-### Implementing Bayesian Statistical Techniques in Genome Wide Association Studies {style="color: #158CBA"}
-
-:::{.project-layout}
-Statistical Genetics Project
-
-[<button>Explore Bayesian tools for GWAS</button>](SP6/Final_Digital Artifact copy.html)
 :::
 
 ### Modeling Trade Shares of GDP vs Natural Disasters {style="color: #158CBA"}
@@ -66,3 +67,4 @@ Are there better/healthier caloric fast food restaurants?
 [<button>Explore Fast Foods Restaurants Code</button>](SP4/FinalReport.html)
 [<button>Explore Part 1 of analysis</button>](SP4/Final_Phase1.html)
 [<button>Explore Part 2 of analysis</button>](SP4/Final_Phase2.html)
+:::

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Nick Kent and Bowman Wingard">
+
+<title>Implementing Bayesian Statistical Techniques in Genome Wide Association Studies</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Final_Digital Artifact_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Final_Digital Artifact_files/libs/quarto-html/quarto.js"></script>
+<script src="Final_Digital Artifact_files/libs/quarto-html/popper.min.js"></script>
+<script src="Final_Digital Artifact_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Final_Digital Artifact_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Final_Digital Artifact_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Final_Digital Artifact_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Final_Digital Artifact_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Final_Digital Artifact_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Final_Digital Artifact_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Implementing Bayesian Statistical Techniques in Genome Wide Association Studies</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Nick Kent and Bowman Wingard </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="loading-packages" class="level1">
+<h1>Loading packages</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesrules)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstanarm)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidybayes)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom.mixed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="motivation" class="level1">
+<h1>Motivation</h1>
+<p><br> The motivation for this project started with an article written by Matthew Stephens and David J. Balding. Their framework used Bayesian techniques to carry out a genome wide association study. Their results consisted of the probability that each SNP in the genome was associated with the SNP of interest. In other words the posterior probability of association which is similar to a p-value in a frequentist framework but has a nicer interpretation. To achieve this they split their approach into three steps: setting a prior, calculating a Bayes factor, and calculating the posterior odds. We decided to veer away from this approach as Bayes factors were not something we were interested in dealing with. Therefore, we went back to the early stages of this class and thought about how a genome wide association study is done, and figured we could find a Bayesian approach to this. This forced us to understand how Bayesian regression works and for that we reffered to a textbook written by Alicia A. Johnson, Miles Q. Ott, and Mine Dogucu. <br></p>
+</section>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p><strong>Goal of our project:</strong> The goal of this project is to figure out how to implement Bayesian Statistical methods in a genome wide association study. <br> <br> The main idea of Bayesian statistics is that we form our understanding of uncertainty or probability by using a combination of our prior beliefs/knowledge along with the things we observe. Frequentist statistics interpret probabilities as the frequency at which an event occurs, whereas bayesians interpret probabilities as the relative plausibility of an event occurring. Furthermore, when most people, frequentists included, try to estimate a parameter they do so by calculating a point estimate from a sample. Bayesians on the other hand treat these unknown parameters(or things they are trying to estimate) as random variables and therefore the parameter follows a probability distribution. So, with this being said when we carry out an analysis or experiment with these two frameworks we get slightly different results. As we mentioned, when a frequentist analysis is run we get a point estimate, and from there we can calculate a p-value and construct a confidence interval to decide whether or not our results are statistically significant. In a Bayesian framework, our result is simply a probability distribution for our parameter of interest and from there we can calculate the probability that our parameter takes on certain values, lies between two values, or is above/below a certain value. <br> <br> Now in order to obtain our probability distribution for our parameter of interest we need to specify a few things. First we need to provide a prior distribution for our parameter. This distribution is representative of our initial beliefs of the parameter. This could come from a past study, but in general it should capture/consider the possible/likely values of the parameter, as well as the shape and strength of the parameters distribution. Then from there, we must specify a likelihood function. The likelihood function should follow the distribution that we believe our data follows. What the likelihood function represents literally is the probability of observing the data we did given different values of the parameter. In other words, it tells us the parameter value that is most plausible given our observed data. Then we must derive the normalizing constant which ensures that our posterior distribution is a valid probability distribution. The normalizing constant usually isn’t a super important aspect of Bayesian statistics as you can usually derive the posterior distribution without it by saying that the posterior is proportional to the product of the likelihood function and the prior. The normalizing constant is the integral with respect to the unknown parameter of the product of the likelihood function and the prior distribution. Now, once we combine our likelihood function along with our prior distribution we will be able to derive what’s known as a posterior distribution. This distribution is an updated distribution for our parameter. <br> <br> The Bayesian framework follows the following set up: <br> <span class="math display">\[P(A|B) = \frac{P(B|A)P(A)}{P(B)}\]</span> <span class="math display">\[P(A|B) \text{ is our posterior for A.}\]</span> <span class="math display">\[P(B|A) \text{ is our likelihood function.}\]</span> <span class="math display">\[P(A) \text{ is our prior for A.}\]</span> <span class="math display">\[P(B) \text{ is the normalizing constant.}\]</span> <br> <br> Before we get into the bulk of the project we want to touch on a few benefits of a Bayesian approach. First off, a Bayesian approach is very nice because of the fact that it incorporates prior knowledge as well as the data you observe to create conclusions about the parameter of interest. In addition, you can update your results as more data is collected. Many people appreciate this as it is very similar to a human way of thinking. For example, if somebody said they could make a 3-point shot in basketball EVERY time, your prior beliefs would be “no way! no one can do that!”. But then if you saw them make 10 in a row (FYI, this would be your likelihood function or observed data), your updated beliefs (posterior distribution) would maybe be “OK, maybe they can make it every time but I’m still skeptical”. But then if they make 1,000 in a row (new likelihood function or observed data), your new updated beliefs would be “OK I believe them, they can make it every time”. Another huge advantage to a Bayesian approach comes from the interpretability, specifically of the posterior distribution. Because the result of the analysis is an entire probability distribution for our parameter it allows us to make direct probability statements such as, there’s a 90% chance that parameter “Y” falls between A and B. <br> <br></p>
+</section>
+<section id="simple-example" class="level1">
+<h1>Simple Example</h1>
+<p>Supposed we are interested in finding out the proportion of people who have two minor alleles at a specific SNP (<span class="math inline">\(\theta\)</span>), either you have two minor alleles or you do not. From a previous study we are fairly confident that 20% of people have 2 minor alleles at the SNP of interest. Therefore the prior distribution of <span class="math inline">\(\theta\)</span> will be modeled as the following:</p>
+<p><span class="math display">\[\theta \sim Beta(2,8)\]</span> The mean or expected value of this distribution is 0.20. <br> Now, we have collected a sample of 50 people and find out that 20 people have 2 minor alleles at the specific SNP and 30 people do not have two minor alleles. When we are collecting a sample like this each observation is a “coin flip”, yes (two minor alleles) or no (not two minor alleles), and therefore our likelihood function can be modeled with a binomial distribution like this:</p>
+<p><span class="math display">\[Y | \theta \sim Binomial(50,\theta)\]</span> and for the collected data, the equation looks like so:</p>
+<p><span class="math display">\[ L(\theta) = \Pr(Y = 20 \mid p) = \binom{50}{20} \theta^{20} (1-\theta)^{30} \]</span> <br> Lastly, when we combine our prior distribution with our likelihood function we get a beta posterior distribution for <span class="math inline">\(\theta\)</span>. This distribution is a combination of our prior successes and observed successes as well as prior fails and observed fails. Refer to the following to see the posterior distribution:</p>
+<p><span class="math display">\[\theta | Y \sim Beta(\text{original alpha + observed successes}, \text{ original beta + observed failures})\]</span></p>
+<p><span class="math display">\[\theta | Y \sim Beta(2+20,30+8)\]</span> <span class="math display">\[\theta | Y \sim Beta(22,38)\]</span> <br> Now, take a look at the prior and likelihood distribution visually before we dive into looking at the posterior</p>
+<section id="prior-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="prior-distribution">Prior Distribution</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prior beliefs of theta</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dbeta</span>(x, <span class="at">shape1 =</span> <span class="dv">2</span>, <span class="at">shape2 =</span> <span class="dv">8</span>), </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"darkblue"</span>, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">ylab =</span> <span class="st">"Density"</span>, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="fu">expression</span>( <span class="sc">~</span> theta),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">main =</span> <span class="fu">expression</span>(<span class="st">"Prior beliefs of "</span> <span class="sc">~</span> theta)) <span class="co"># mean --&gt; about 20% of people will have two minor alleles</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="likelihood-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-distribution">Likelihood Distribution</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set parameters</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>successes <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sequence of theta values</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>theta_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>likelihood_function <span class="ot">&lt;-</span> <span class="cf">function</span>(theta, successes, trials) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (theta<span class="sc">^</span>successes <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> theta)<span class="sc">^</span>(trials <span class="sc">-</span> successes))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the likelihood for each theta</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>likelihood_values <span class="ot">&lt;-</span> <span class="fu">sapply</span>(theta_values, likelihood_function, <span class="at">successes =</span> successes, <span class="at">trials =</span> trials)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the likelihood function</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(theta_values, likelihood_values, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"blue"</span>, </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(theta), <span class="at">ylab =</span> <span class="st">"Likelihood"</span>, </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Likelihood Function"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="posterior-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="posterior-distribution">Posterior Distribution</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior distribution of theta</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dbeta</span>(x, <span class="at">shape1 =</span> <span class="dv">22</span>, <span class="at">shape2 =</span> <span class="dv">38</span>), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">col =</span> <span class="st">"darkblue"</span>, </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">lwd =</span> <span class="dv">2</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">ylab =</span> <span class="st">"Density"</span>, </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">xlab =</span> <span class="fu">expression</span>( <span class="sc">~</span> theta),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">main =</span> <span class="fu">expression</span>(<span class="st">"Posterior beliefs of "</span> <span class="sc">~</span> theta)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pbeta</span>(<span class="fl">0.2</span>, <span class="at">shape1 =</span> <span class="dv">22</span>, <span class="at">shape2 =</span> <span class="dv">38</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9984086</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pbeta</span>(<span class="fl">0.555</span>, <span class="at">shape1 =</span> <span class="dv">22</span>, <span class="at">shape2 =</span> <span class="dv">38</span>) <span class="sc">-</span> <span class="fu">pbeta</span>(<span class="fl">0.25</span>, <span class="at">shape1 =</span> <span class="dv">22</span>, <span class="at">shape2 =</span> <span class="dv">38</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9738378</code></pre>
+</div>
+</div>
+<p>So, we know that we had a prior distribution for <span class="math inline">\(\theta\)</span> that had a mean of 0.20. Then we observed 20/50 successes and 30/50 failures, meaning the observed proportion of people with two minor alleles was 0.40. Then we combined these two pieces to obtain a beta distribution with parameters (22, 38). The expected value of this distribution, or in other words our updated beliefs about the proportion of people who have two minor alleles is 0.3667. Furthermore there is 99% chance that <span class="math inline">\(\theta\)</span> is greater than 0.2 and a 97% chance that the value of <span class="math inline">\(\theta\)</span> is between 0.25 and 0.55. So we think we can be fairly confident that the value of <span class="math inline">\(\theta\)</span> is above the prior value.</p>
+</section>
+</section>
+<section id="our-project" class="level1">
+<h1>Our project</h1>
+<section id="gwasregression-using-a-bayesian-framework" class="level2">
+<h2 class="anchored" data-anchor-id="gwasregression-using-a-bayesian-framework">GWAS/Regression using a Bayesian framework</h2>
+<p>To restate the goal of this project, we want to implement a Bayesian framework into a genome wide association study. <br> <br> Let’s first discuss how a genome wide association study works using a frequentist approach. Simply put the idea of a genome wide association studies is to try and find genetic variants (single nucleotide polymorphisms or SNPs) that are associated with a specific trait. We often have thousands or even hundreds of thousands of SNPs that we want to check to see if they are associated with the trait of interest. To do this we run a marginal regression models which means we create a regression model for each SNP as the predictor and the trait of interest as the outcome variable and collect a point estimate and p-value from the model. Once we have collected a point estimate and p-value for each SNP, we order them from lowest to highest(most significant to least significant) p-value to see if there are any SNPs that have a statistically significant effect on the outcome variable. Usually we look for p-values below <span class="math inline">\(5 \times 10^{-8}\)</span>. You interpret these p-values as the probability of observing this point estimate if the null hypothesis (no relationship between SNP and trait) is true. This isn’t a very intuitive result and one of the main reasons we shift to explore a Bayesian approach. <br> <br> So to take a Bayesian approach and implement it into a genome wide association study, we need to learn how Bayesian regression works, and then we just implement it for each SNP. A simple linear regression model has the following form:</p>
+<p><span class="math display">\[Y = \beta_0 + \beta_1 X\]</span></p>
+<p>Meaning we have three unknown parameters that we are trying to estimate. <span class="math inline">\(\beta_0\)</span>, our intercept. <span class="math inline">\(\beta_1\)</span>, our slope. <span class="math inline">\(\sigma^2\)</span>, the variance of our y values. This means we first have to set a prior for each one of those parameters. <span class="math display">\[\beta_0 \sim \; ???\]</span> This represents our prior beliefs of our intercept coefficient, meaning what is the expected value or values of our outcome variable if the predictor variable equals zero. <br> <br> <span class="math display">\[\beta_1 \sim \; ???\]</span> This represents our prior beliefs of our slope coefficient, meaning what do we expect the effect size of the predictor variable to be or how much will the outcome variable change on average if the predictor increases by one. <br> <br> <span class="math display">\[\sigma^2 \sim \; ???\]</span> Lastly, the prior distribution of the variance of our outcome variable. <br> <br> Then we need to create a likelihood function, which represents what values of <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\sigma^2\)</span> are most plausible given our observed data. This function tends to have the following form, and will usually be distributed normally. <span class="math display">\[ Y \; | \; \beta_0, \beta_1, \sigma^2 \sim  \; N(\beta_0 + \beta_1X, \sigma^2)\]</span> <br> <br> Then we put all of these together to derive a posterior distribution for our parameters of interest. <span class="math display">\[ \pi(\beta_0, \beta_1, \sigma^2 \; | \; Y)\propto f(Y \; | \; \beta_0, \beta_1, \sigma^2) \pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)\]</span> This distribution contains our updated beliefs about our parameters of interest. One very important thing to note is that this posterior probability distribution is very difficult (and maybe impossible) to derive analytically or by hand. The reason being because the normalizing constant is found by integrating the product of the likelihood and prior over all possible values of the parameters. So the normalizing constant of the above posterior distribution follows the following form shown in the denominator of the fraction. <br> <span class="math display">\[\pi(\beta_0, \beta_1, \sigma^2 \; | \; Y) =  \frac{f(Y \; | \; \beta_0, \beta_1, \sigma^2) \pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)} {\int\int\int  f(Y \; | \; \beta_0, \beta_1, \sigma^2)\;\pi(\beta_0)\pi(\beta_1)\pi(\sigma^2)  d\beta_0\beta_1d\sigma^2}\]</span> <br> Instead of solving this, we are instead going to simulate our posterior distribution and then get separate distributions for each parameters. This will be done using Markov Chain Monte Carlo (MCMC). We are not experts on this tool nor is it the focus of our project but we want to discuss it briefly. MCMC combines two ideas: Markov chains and Monte Carlo. Monte Carlo which is a statistical tool for repeated sampling. Markov chains is a process of describing a sequence of possible events in which the probability of the next event only depends on the state of the current event. So when we combine these two tools we get a way to estimate very complex probability distributions, like the posterior of a Bayesian regression. <br></p>
+</section>
+<section id="creating-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="creating-the-data">Creating the data</h2>
+<p><br> We are creating our own data for the purpose of this example. In this case we are looking at 100 peoples heights, and then 4 SNPs in each of their genomes. At each SNP everyone has a 64% chance of 0 minor alleles, a 32% chance of 1 minor allele, and a 4% chance of 2 minor alleles. Then each persons height is randomly selected from a normal distribution. It is also important to note that everyones height also depends on the number of minor alleles that they have at SNP4 and SNP2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">494</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Generating data</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># generate data</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>SNP1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">size =</span> n, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">64</span>, .<span class="dv">32</span>, .<span class="dv">04</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>SNP2 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">size =</span> n, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">64</span>, .<span class="dv">32</span>, .<span class="dv">04</span>))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>SNP3 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">size =</span> n, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">64</span>, .<span class="dv">32</span>, .<span class="dv">04</span>))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>SNP4 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">size =</span> n, <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">64</span>, .<span class="dv">32</span>, .<span class="dv">04</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>height <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">70</span>, <span class="at">sd =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span>SNP4 <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>SNP3 <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>SNP2 <span class="sc">+</span> <span class="dv">0</span><span class="sc">*</span>SNP1 </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">cbind</span>(height, SNP1, SNP2, SNP3, SNP4))</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>height))<span class="sc">+</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    height SNP1 SNP2 SNP3 SNP4
+1 66.06921    0    1    0    0
+2 78.45188    0    0    0    1
+3 72.58425    0    0    0    0</code></pre>
+</div>
+</div>
+</section>
+<section id="our-model" class="level2">
+<h2 class="anchored" data-anchor-id="our-model">Our model</h2>
+<p>So now we take the Bayesian regression framework and implement into a genome wide association study. We start with the following regression model, and remember because we are doing a GWAS and using a marginal regression this type of model will be fit with each SNP in our data set. In this case our intercept is noted as <span class="math inline">\(\theta\)</span>, our slope coefficient is <span class="math inline">\(SNP_{Effect}\)</span>, and the variance of the heights (which is seen in the likelihood function in the next section) is noted as <span class="math inline">\(\epsilon\)</span>.</p>
+<p><span class="math display">\[Height_i = \theta + SNP_{Effect}\;x_i + \epsilon_i \;\;\;\; \epsilon_i \sim N(0, \sigma^2)\]</span></p>
+</section>
+<section id="likelihood-function" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-function">Likelihood function</h2>
+<p>Then we must set a likelihood function. In this case we will have a normally distributed likelihood function because we know that heights are a normally distributed random variable with a mean and some variance. What does this likelihood function means in words? It represents what values of <span class="math inline">\(\theta\)</span>, <span class="math inline">\(SNP_{Effect}\)</span>, and <span class="math inline">\(\epsilon\)</span> make our observed data, Height(Y/outcome) and SNPs(X/predictor), most plausible. <span class="math display">\[ Height \; | \; \theta, \; SNP_{Effect}, \; \sigma^2 \sim \; N(\theta + SNP_{Effect}x, \; \sigma^2)\]</span></p>
+</section>
+<section id="prior-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="prior-distributions">Prior distributions</h2>
+<p>First, the prior for <span class="math inline">\(\theta\)</span>. We set the prior distribution of <span class="math inline">\(\theta\)</span> as a normal distribution with a mean of 70 and a variance of 5. What this means is that we expect peoples heights to be centered around 70 inches if they have zero minor alleles or if a SNP has no effect, but this could also vary slightly. Then, the prior for <span class="math inline">\(SNP_{Effect}\)</span>. This represents our prior beliefs about what we think the increase in height will be if the number of minor alleles increases by one or what we think the effect of a SNP will be on the outcome variable height. It is centered at zero because we tend to think that the majority (~99% or more) of SNPs do not have an effect on height, but once again this could also vary a little bit. Finally, the prior for <span class="math inline">\(\epsilon\)</span>. This is representative of our beliefs about the variance of our heights and could represent other factors that influence height beyond genetic information. <span class="math display">\[\theta \sim \; N(70,5^2) , \; SNP_{Effect} \sim \; N(0,1)  , \; \sigma^2  \sim \; Exponential(0.2)\]</span></p>
+<p>All of these priors are shown below. <br></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_normal</span>(<span class="at">mean =</span> <span class="dv">70</span>, <span class="at">sd =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theta"</span>, <span class="at">y =</span> <span class="st">"pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_normal</span>(<span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"SNP Effect"</span>, <span class="at">y =</span> <span class="st">"pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_gamma</span>(<span class="at">shape =</span> <span class="dv">1</span>, <span class="at">rate =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sigma"</span>, <span class="at">y =</span> <span class="st">"pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="posterior-distribution-1" class="level2">
+<h2 class="anchored" data-anchor-id="posterior-distribution-1">Posterior distribution</h2>
+<p>Now, our posterior distribution which we mentioned will actually get simulated, but it will have the form shown below.</p>
+<p><span class="math display">\[ \pi(\theta, \; SNP_{Effect}, \; \sigma  \; | \; Height) \; \propto \; f(Height \; | \; \theta, \; SNP_{Effect}, \; \sigma) \; \pi(\theta) \; \pi(SNP_{Effect}) \; \pi(\sigma)\]</span> <br> This means that our results are a joint probability function of <span class="math inline">\(\theta\)</span>, <span class="math inline">\(SNP_{Effect}\)</span>, <span class="math inline">\(\sigma\)</span> given our observed data.</p>
+</section>
+<section id="simulating-the-posterior-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="simulating-the-posterior-distributions">Simulating the posterior distributions</h2>
+<p>We mentioned earlier that we must simulate our posterior distribution. Here is the code for how we will do it, and then we will talk about the results below. Remember, we simulated all of this data so we know the truth about each SNP and it’s effect on height. What we want to find out is if this is an effective way to analyze the relationship between SNPs and height. <br></p>
+<p>Here we are creating a function to run a MCMC simulation for height as a function a one SNP. As you can see it requires you to specify the distribution for all of your priors, which we have done.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to run a MCMC simulation for each variable</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred_posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(SNP, height, data) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  gene_mod <span class="ot">&lt;-</span> <span class="fu">stan_glm</span>(height <span class="sc">~</span> SNP, <span class="at">data =</span> data,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">family =</span> gaussian,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">prior_intercept =</span> <span class="fu">normal</span>(<span class="dv">70</span>, <span class="dv">5</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">prior =</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">prior_aux =</span> <span class="fu">exponential</span>(<span class="fl">0.2</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">5000</span><span class="sc">*</span><span class="dv">2</span>, <span class="at">seed =</span> <span class="dv">84735</span>, </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">refresh =</span> <span class="dv">0</span>,        </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">show_messages =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">posterior_interval</span>(gene_mod, <span class="at">prob =</span> <span class="fl">0.95</span>))</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mcmc_dens_overlay</span>(gene_mod)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br> Starting first with <strong>SNP1</strong>. As a reminder, when we simulated the data SNP1 does not have an effect on height.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pred_posterior</span>(data<span class="sc">$</span>SNP1, data<span class="sc">$</span>height, data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5%     97.5%
+(Intercept) 72.490335 75.113351
+SNP         -1.768202  1.132637
+sigma        5.423766  7.163915</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br> If we take a look at the results we see it matches our expectation almost perfectly. The posterior distribution for <span class="math inline">\(SNP_{Effect}\)</span> (located in the middle of the three graphs) is centered right at zero which means that the expected value of the increase in height if the number of minor alleles at SNP1 increases by one unit is zero. Then if we look over to the posterior distribution of the intercept(<span class="math inline">\(\theta\)</span>) we see that it has changed a bit from our prior distribution. Recall that our prior distribution for <span class="math inline">\(\theta\)</span> had an expected value of 70, and now we see that <span class="math inline">\(\theta\)</span> has an expected value of about 74, meaning if someone has zero minor alleles at SNP 1 we would expect them to have a height of about 74 inches. This means that the data that we observed suggests that the expected value for the intercept is higher than we originally thought. This same conclusion is relevant for the next three SNPs. Lastly, the posterior distribution for the variance/sigma(or <span class="math inline">\(\epsilon\)</span> in our case) is now a little bit higher than the prior belief for <span class="math inline">\(\epsilon\)</span> suggesting that the heights we observe have more variance than we originally thought. This same conclusion is relevant for the next three SNPs. <br> <br> Now looking at <strong>SNP2</strong>. As a reminder, when we simulated the data SNP2 had a small effect on height.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pred_posterior</span>(data<span class="sc">$</span>SNP2, data<span class="sc">$</span>height, data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  2.5%     97.5%
+(Intercept) 71.9558738 74.572011
+SNP         -0.3147939  2.593274
+sigma        5.3326069  7.056943</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br> Starting first with the posterior for <span class="math inline">\(SNP_{Effect}\)</span>. We see now that the expected value or center of the distribution is right at about 1. This means that for each additional minor allele at SNP2 we would expect that someones height goes up by an average of 1 inch. Remember that when we simulated the data, the actual value for this slope coefficient was 2. What we mean by that is that for each minor allele someone had at SNP2, 2 inches was added on to their total height. The reason the posterior distribution is centered at 1 instead of 2 is because the Bayesian framework is also taking into account our prior beliefs about this slope parameter, which was centered at 0. <br> <br> Now looking at <strong>SNP3</strong>. As a reminder, when we simulated the data SNP3 does not have an effect on height.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pred_posterior</span>(data<span class="sc">$</span>SNP3, data<span class="sc">$</span>height, data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5%    97.5%
+(Intercept) 72.409337 75.04543
+SNP         -1.553144  1.37820
+sigma        5.438955  7.19349</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br> The results we see from SNP 3 are almost identical to the ones we observed from SNP1 because in both cases when we created the data peoples height were not dependent on the number of SNPs someone has at these SNPs. <br> <br> Now looking at <strong>SNP4</strong>. As a reminder, when we simulated the data SNP4 had a large effect on height.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pred_posterior</span>(data<span class="sc">$</span>SNP4, data<span class="sc">$</span>height, data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5%     97.5%
+(Intercept) 71.44541 73.972015
+SNP          1.03678  3.801791
+sigma        4.95970  6.616405</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Final_Digital-Artifact_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br> Last but not least, SNP4. The posterior distribution for <span class="math inline">\(SNP_{Effect}\)</span> in this case is most different from the prior distribution. This is what we expect to see given what we know about the data. The expected value of this posterior distribution is about 2.5. This is fairly conservative given the truth that for each additional minor allele at SNP4 someones height will actually increase by 5 inches.</p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<section id="drawbacks" class="level2">
+<h2 class="anchored" data-anchor-id="drawbacks">Drawbacks</h2>
+<p>There are three main drawbacks from this approach that we have used: computational cost, intellectual cost, and subjectivity. <br> The computational cost of this approach comes solely from the need to simulate our posterior distributions for <span class="math inline">\(\theta\)</span>, <span class="math inline">\(SNP_{Effect}\)</span>, and <span class="math inline">\(\epsilon\)</span>. In this approach we used the RStan package which is used for defining and analyzing Bayesian models in R. In our case we are using the RStan package for Bayesian inference and more specifically we are using Markov Chain Monte Carlo to estimate our posterior models. This is very computationally expensive because of the amount of iteration that is used. In our very simple understanding of MCMC, each step in the chain involves taking a new sample and evaluating our likelihood function and the three prior distributions. As the data grows the amount of computing power needed to perform this grows as well. In our case we only used 4 SNPs and 100 people, but most genome wide association studies contain thousands of people and more importantly about a million SNPs. So if these methods were used in practice it would be extremely computationally expensive. <br> Now to quickly touch on the intellectual cost of using this approach. Recall that the results for each regression model (height ~ SNP) that was fit was three distributions, one for each parameter in the model. In a normal GWAS about 1 million SNPs are used. Imagine we had to look at these results for one million SNPs and had to find the ones with the largest change from the prior distributions, we would be looking for a while. One way we could avoid having to do that is finding a way to pull out the mean or expected value from each of the three distributions each time we fit a model (height ~ SNP) and saving them to a data frame. That way we could easily arrange the models/SNP from highest expected effect on height to lowest expected effect on height. <br> Now, as with any Bayesian approach there is a subjectivity aspect to this analysis. Conclusions from a Bayesian analysis are drawn based on a likelihood function and a prior distribution. The issue arises from our prior distribution which contributes our prior beliefs to the posterior distribution and depends only on the researchers prior beliefs about the association in question, meaning it is influenced by someones interpretations, opinions, or experiences. One way we can reduce the subjectivity of our outcomes is by using non-informative (or weakly informative) priors. These are prior distributions that do not impact the posterior distribution a lot and let the observed data speak for itself. <br></p>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next steps</h2>
+<p>There are a couple things we would like to complete in the future: sensitivity analysis and different ways to interpret results. <br> Starting first with some sensitivity analysis. What we mean by this is: what happens to our posterior distributions if we changed our prior distributions? For example, if our prior for our slope parameter was <span class="math inline">\(SNP_{Effect} \sim N(0,5)\)</span> instead of <span class="math inline">\(SNP_{Effect} \sim N(0,1)\)</span>, how different would our results be? Would they reflect the truth more closely? <br> Then we would like to find ways to draw out different conclusions from the RStan/MCMC output. Meaning we can find ways to get credible intervals for each parameter for each marginal regression model. Those would be very helpful because they can be interpreted very easily: there is a <span class="math inline">\(\_\_\%\)</span> chance that <span class="math inline">\(SNP_{Effect}\)</span> (Slope) lies between a and b. We can also calculate probabilities that each parameter is above/below a certain value: there is a <span class="math inline">\(\_\_\%\)</span> chance that <span class="math inline">\(SNP_{Effect}\)</span> is greater than c.&nbsp;These types of conclusions can help us draw more concrete conclusions about the plausibility that each parameter has a certain value. <br></p>
+</section>
+<section id="end" class="level2">
+<h2 class="anchored" data-anchor-id="end">End</h2>
+<p>In this project we looked into how Bayesian statistical methods can be implemented into genome wide association studies(GWAS). As we know, GWAS is the process of creating a simple linear regression model for each SNP along the genome (predictor variable) with our trait of interest (outcome variable). We began by introducing the structure of Bayesian statistics, then explained how that structure can be used in a regression setting. Once we understood the methods that were going to be used, we created some data and put them to the test. <br></p>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Johnson, Alicia. Bayes Rules! An Introduction to Applied Bayesian Modeling. <br> <br> Stephens, Matthew, and David J. Balding. “Bayesian statistical methods for Genetic Association Studies.” Nature Reviews Genetics, vol.&nbsp;10, no. 10, Oct.&nbsp;2009, pp.&nbsp;681–690, https://doi.org/10.1038/nrg2615 <br> <br> Stan Development Team (2025). RStan: the R interface to Stan. R package version 2.32.7. https://mc-stan.org/. <br> <br> Okonek, Taylor. Math/Stat 355: Statistical Theory, 7 Dec.&nbsp;2023, mac-stat.github.io/MathStat355Notes/</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
