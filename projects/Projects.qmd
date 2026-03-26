@@ -22,7 +22,7 @@ What happens to stock prices in response to equity research recommendations?
 :::{.project-layout}
 Statistical Genetics Project
 
-[<button>Explore Bayesian tools for GWAS</button>](SP6/Final_Digital Artifact.html)
+[<button>Explore Bayesian tools for GWAS</button>](SP6/Final_Digital_Artifact.html)
 [<button>Explore Formal Presentation</button>](SP6/Capstone Final Presentation.pdf)
 :::
 
