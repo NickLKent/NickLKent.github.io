@@ -5,10 +5,22 @@ format:
     css: "styles.css"
 ---
 
+### Can Markets Be Predicted?
+:::{.project-layout}
+Although market returns are not predictable, volatility might be...
+[<button>Explore Volatility Analysis</button>](SP8/Can_Markets_Be_Predicted.html)
+:::
+
+### Do Equity Research Analyst Recommendations matter?
+:::{.project-layout}
+What happens to stock prices in response to equity research recommendations?
+[<button>Explore Econometric Analysis</button>](SP9/Kent - ECON 381 - Final Term Paper.pdf)
+:::
+
 ### Forecasting Electricity Usage at Macalester College {style="color: #158CBA"}
 
 :::{.project-layout}
-Correlated Data - Time Series Project
+How has the electricity usage at Macalester College changed over the years
 
 [<button>Explore Time Series Analysis</button>](SP7/mini-project.html)
 :::
@@ -16,7 +28,7 @@ Correlated Data - Time Series Project
 ### Implementing Bayesian Statistical Techniques in Genome Wide Association Studies {style="color: #158CBA"}
 
 :::{.project-layout}
-STAT 494 - Final Project + Capstone
+Statistical Genetics Project
 
 [<button>Explore Bayesian tools for GWAS</button>](SP6/Final_Digital Artifact copy.html)
 :::
@@ -54,14 +66,3 @@ Are there better/healthier caloric fast food restaurants?
 [<button>Explore Fast Foods Restaurants Code</button>](SP4/FinalReport.html)
 [<button>Explore Part 1 of analysis</button>](SP4/Final_Phase1.html)
 [<button>Explore Part 2 of analysis</button>](SP4/Final_Phase2.html)
-:::
-
-###  Genome Wide Association Study {style="color: #158CBA"}
-
-:::{.project-layout}
-STAT 494 - Content Summary #1
-
-[<button>Explore a GWAS Simulation + Summary</button>](SP5/ContentSummary_NoAssoc.html)
-
-[<button>Explore a GWAS Simulation + Summary(Outcome depends on SNP)</button>](SP5/ContentSummary_YesAssoc.html)
-:::
