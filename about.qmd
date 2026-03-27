@@ -14,12 +14,18 @@ Major: Statistics
 
 Minor: Computer Science and Economics
 
-September 2022 - Present
+September 2022 - May 2026
 :::
 
 ## Experience {style="color: #158CBA"}
 
 ::: {#Experience .Experience}
+**Intact Specialty Solutions** \| Minneapolis, MN
+
+Predictive Modeling Intern
+
+March 2026 - Present
+
 **PAR Technology** \| Minneapolis, MN
 
 Software Engineering Intern
@@ -50,13 +56,13 @@ September 2023 - Present
 ::: {#Extracurriculars .Extracurriculars}
 **Macalester Men's Soccer**
 
--   MIAC All-Conference Honors(Fall 2022, Fall 2023, Fall 2024)
+-   MIAC All-Conference Honors(Fall 2022, Fall 2023, Fall 2024, Fall 2025)
 
--   United Soccer Coaches All-Region Honors(Fall 2023)
+-   United Soccer Coaches All-Region Honors(Fall 2023, Fall 2024, Fall 2025)
 
--   CSC Academic All-District Honors(Fall 2023)
+-   CSC Academic All-District Honors(Fall 2023, Fall 2024, Fall 2024)
 
--   MIAC Academic All-Conference(Fall 2023)
+-   MIAC Academic All-Conference(Fall 2023, Fall 2024, Fall 2025)
 
 -   Rising Scot Scholar Athlete of the Year(2023-2024)
 :::
