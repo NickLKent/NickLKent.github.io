@@ -2,30 +2,21 @@
 title: "Welcome!"
 format: 
   html:
-    css: styles.css
+    css: "styles.css"
 ---
 
-::: {.welcome-page}
+::: {.intro style="float:right"}
+Welcome to my personal website, created using **Quarto** in R/RStudio. My name is **Nick Kent**. I am a junior at Macalester College pursuing a major in statistics, and minors in computer science and economics. I enjoy data exploration and analysis in a variety of field and topics, and hope to continue to grow my skillset. Please take a look through this website if you would like to learn more about myself and some of my work.
 
-<div class="hero">
-  <div class="hero-text">
-    <h1>Hi, I'm Nick Kent</h1>
-    <p>
-      Welcome to my personal website, built with <strong>Quarto</strong> in <strong>R/RStudio</strong>.
-      I am a junior at Macalester College majoring in <strong>statistics</strong>, with minors in
-      <strong>computer science</strong> and <strong>economics</strong>.
-    </p>
-    <p>
-      I enjoy data exploration and analysis across a variety of topics, and I hope to continue
-      growing my skill set. Feel free to look through this website to learn more about me and my work.
-    </p>
-  </div>
-
-  <div class="hero-image">
-```{r, echo=FALSE, out.width='220px', fig.align='center'}
+```{r, echo=FALSE}
 knitr::include_graphics("Headshot.jpg")
 ```
 
-</div> </div> <div class="section"> <h2>Soccer</h2> <p> I spend a lot of time playing soccer. During the fall and most of the school year, I compete as a member of the Macalester College men's soccer team. Over the summer, I play with Minneapolis City Soccer Club. </p> </div> <div class="image-grid two"> <img src="mac_soccer.jpg" alt="Macalester soccer"> <img src="city_soccer.jpg" alt="Minneapolis City soccer"> </div> <div class="section"> <h2>Outside of School</h2> <p> I also enjoy spending time outdoors with friends and family and trying new restaurants. Some of my favorite places to hang out in Minneapolis are the lakes, including Harriet, Bde Maka Ska, Cedar, and Isles. </p> <p> I also enjoy restaurants such as Black Sheep Pizza, World Street Kitchen, Quang, and Andale Taqueria. </p> </div> <div class="image-grid four"> <img src="friends.jpeg" alt="Friends"> <img src="lake.jpeg" alt="Lake"> <img src="bridge.jpeg" alt="Bridge"> <img src="fam.jpeg" alt="Family"> </div>
+I spend lots of time playing soccer. During the fall(and the majority of the school year) I compete as a member of the men's soccer team at Macalester College, and over the summer I spend time playing with Minneapolis City Soccer Club.
 
+<img src="mac_soccer.jpg" width="380"/> <img src="city_soccer.jpg" width="380"/>
+
+I also enjoy spending time with friends and family outdoors, and trying new restaurants. My favorite places to hangout in Minneapolis are the lakes in Minneapolis(Harriet, Bde Maka Ska, Cedar, Isles). Furthermore, I enjoy restaurants such as Black Sheep Pizza, World Street Kitchen, Quangs, and Andale Taqueria.
+
+<img src="friends.jpeg" width="310"/> <img src="lake.jpeg" width="250/"/> <img src="bridge.jpeg" width="300"/> <img src="fam.jpeg" width="350"/>
 :::
