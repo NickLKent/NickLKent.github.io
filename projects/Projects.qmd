@@ -5,14 +5,14 @@ format:
     css: "styles.css"
 ---
 
-### Can Markets Be Predicted?
+### Can Markets Be Predicted? {style="color: #158CBA"}
 
 :::{.project-layout}
 Although market returns are not predictable, volatility might be...
 [<button>Explore Volatility Analysis</button>](SP8/Can_Markets_Be_Predicted.html)
 :::
 
-### Do Equity Research Analyst Recommendations matter?
+### Do Equity Research Analyst Recommendations matter? {style="color: #158CBA"}
 
 :::{.project-layout}
 What happens to stock prices in response to equity research recommendations?
