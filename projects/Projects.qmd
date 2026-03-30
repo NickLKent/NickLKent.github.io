@@ -9,6 +9,7 @@ format:
 
 :::{.project-layout}
 Although market returns are not predictable, volatility might be...
+
 [<button>Explore Volatility Analysis</button>](SP8/Can_Markets_Be_Predicted.html)
 :::
 
@@ -16,6 +17,7 @@ Although market returns are not predictable, volatility might be...
 
 :::{.project-layout}
 What happens to stock prices in response to equity research recommendations?
+
 [<button>Explore Econometric Analysis</button>](SP9/Kent - ECON 381 - Final Term Paper.pdf)
 :::
 
